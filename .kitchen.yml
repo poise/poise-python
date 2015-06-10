@@ -1,0 +1,8 @@
+---
+#<% require 'poise_boiler' %>
+<%= PoiseBoiler.kitchen(platforms: 'linux') %>
+
+suites:
+- name: default
+  run_list:
+  - recipe[poise-python_test]
