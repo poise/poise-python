@@ -16,3 +16,10 @@
 
 require 'serverspec'
 set :backend, :exec
+
+describe 'python_runtime' do
+  describe file('/root/one') do
+    it { is_expected.to be_a_file }
+    its(:content) { are_expected.to start_with '2.' }
+  end
+end

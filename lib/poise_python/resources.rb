@@ -15,6 +15,7 @@
 #
 
 require 'poise_python/resources/python_runtime'
+require 'poise_python/resources/python_execute'
 
 
 module PoisePython

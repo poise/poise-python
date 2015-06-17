@@ -18,3 +18,15 @@
 package 'lsb-release' if platform?('debian') && node['platform_version'].start_with?('6')
 
 python_runtime '2'
+
+file '/root/poise_python_test.py' do
+  user 'root'
+  group 'root'
+  mode '644'
+  content <<-EOH
+import sys, platform
+open(sys.argv[1], 'w').write(platform.python_version())
+EOH
+end
+
+python_execute '/root/poise_python_test.py /root/one'
