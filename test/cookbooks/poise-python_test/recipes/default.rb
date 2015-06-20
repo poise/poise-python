@@ -19,6 +19,8 @@ package 'lsb-release' if platform?('debian') && node['platform_version'].start_w
 
 python_runtime '2'
 
+python_runtime '3'
+
 file '/root/poise_python_test.py' do
   user 'root'
   group 'root'
@@ -29,4 +31,10 @@ open(sys.argv[1], 'w').write(platform.python_version())
 EOH
 end
 
-python_execute '/root/poise_python_test.py /root/one'
+python_execute '/root/poise_python_test.py /root/py2' do
+  python '2'
+end
+
+python_execute '/root/poise_python_test.py /root/py3' do
+  python '3'
+end
