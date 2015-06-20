@@ -14,6 +14,7 @@
 # limitations under the License.
 #
 
+require 'poise_python/python_providers/scl'
 require 'poise_python/python_providers/system'
 
 
@@ -22,5 +23,9 @@ module PoisePython
   #
   # @since 1.0.0
   module PythonProviders
+    Chef::Platform::ProviderPriorityMap.instance.priority(:python_runtime, [
+      PoisePython::PythonProviders::Scl,
+      PoisePython::PythonProviders::System,
+    ])
   end
 end
