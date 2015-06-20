@@ -14,8 +14,9 @@
 # limitations under the License.
 #
 
-require 'chef/provider'
-require 'chef/resource'
+require 'chef/mixin/which'
+require 'chef/provider/execute'
+require 'chef/resource/execute'
 require 'poise'
 
 require 'poise_python/resources/python_runtime'
