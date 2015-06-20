@@ -82,6 +82,21 @@ module PoisePython
           end
         end
 
+        # Environment variables to pass to shell_out.
+        #
+        # @return [Hash]
+        def environment
+          if new_resource.parent_python
+            environment = new_resource.parent_python.python_environment
+            if new_resource.environment
+              environment = environment.merge(new_resource.environment)
+            end
+            environment
+          else
+            new_resource.environment
+          end
+        end
+
       end
     end
   end
