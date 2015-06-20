@@ -50,7 +50,8 @@ module PoisePython
           provider_for_action(:python_binary).python_binary
         end
 
-        # The environment variables for this Python. This is an output property.
+        # The environment variables for this Python installation. This is an
+        # output property.
         #
         # @return [Hash<String, String>]
         # @example
