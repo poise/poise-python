@@ -12,16 +12,9 @@ env:
   global:
   - USE_SYSTEM_GECODE=true
   - KITCHEN_LOCAL_YAML=.kitchen.travis.yml
-  - secure: YOM++OBAaAhRGG4IkODRzmscd0JAW1w5jnfTcpF1nV9pGFEicFGGneHANzT2FdNl/xU2BDzoQd46Wv5rSPb0C+Kw00qYyadTsyWaVVggHL60FLFWGpnFq29iApHnKA+HX5qoKGgtW5ZPczJlwumuZvr+pgstUOVYTk/RJqFy+vw=
 bundler_args: "--binstubs=$PWD/bin --jobs 3 --retry 3"
 script:
-- "./bin/rake spec"
-- "./bin/rake chef:foodcritic"
-- if [ "$TRAVIS_SECURE_ENV_VARS" = true ]; then openssl rsa -in test/docker/docker.pem
-  -passin env:KITCHEN_DOCKER_PASS -out test/docker/docker.key; fi
-- if [ "$TRAVIS_SECURE_ENV_VARS" = true ]; then wget https://get.docker.io/builds/Linux/x86_64/docker-latest
-  -O docker; fi
-- if [ "$TRAVIS_SECURE_ENV_VARS" = true ]; then chmod +x docker; fi
-- if [ "$TRAVIS_SECURE_ENV_VARS" = true ]; then ./bin/kitchen test -d always; fi
+- "./bin/rake travis"
 gemfile:
 - test/gemfiles/chef-12.gemfile
+- test/gemfiles/master.gemfile
