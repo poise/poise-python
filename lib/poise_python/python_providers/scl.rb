@@ -42,6 +42,16 @@ module PoisePython
           '~> 20.0' => 'https://www.softwarecollections.org/en/scls/rhscl/python33/fedora-20-x86_64/download/rhscl-python33-fedora-20-x86_64.noarch.rpm',
         },
       })
+      scl_package('2.7.8', 'python27', {
+        ['rhel', 'centos'] => {
+          '~> 7.0' => 'https://www.softwarecollections.org/en/scls/rhscl/python27/epel-7-x86_64/download/rhscl-python27-epel-7-x86_64.noarch.rpm',
+          '~> 6.0' => 'https://www.softwarecollections.org/en/scls/rhscl/python27/epel-6-x86_64/download/rhscl-python27-epel-6-x86_64.noarch.rpm',
+        },
+        'fedora' => {
+          '~> 21.0' => 'https://www.softwarecollections.org/en/scls/rhscl/python27/fedora-21-x86_64/download/rhscl-python27-fedora-21-x86_64.noarch.rpm',
+          '~> 20.0' => 'https://www.softwarecollections.org/en/scls/rhscl/python27/fedora-20-x86_64/download/rhscl-python27-fedora-20-x86_64.noarch.rpm',
+        },
+      })
 
       def python_binary
         ::File.join(scl_folder, 'root', 'usr', 'bin', 'python')
