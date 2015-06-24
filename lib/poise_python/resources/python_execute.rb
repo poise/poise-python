@@ -54,7 +54,6 @@ module PoisePython
       # @see Resource
       # @provides python_execute
       class Provider < Chef::Provider::Execute
-        include Poise
         include Chef::Mixin::Which
         provides(:python_execute)
 
