@@ -27,16 +27,21 @@ module PoisePython
 
       def self.default_inversion_options(node, new_resource)
         super.merge({
+          pip_version: new_resource.pip_version,
+          setuptools_version: new_resource.setuptools_version,
           version: new_resource.version,
+          virtualenv_version: new_resource.virtualenv_version,
         })
       end
 
       # The `install` action for the `python_runtime` resource.
       #
-      # @abstract
       # @return [void]
       def action_install
-        raise NotImplementedError
+        notifying_block do
+          install_python
+          install_pip
+        end
       end
 
       # The `uninstall` action for the `python_runtime` resource.
@@ -44,7 +49,9 @@ module PoisePython
       # @abstract
       # @return [void]
       def action_uninstall
-        raise NotImplementedError
+        notifying_block do
+          uninstall_python
+        end
       end
 
       # The path to the `python` binary. This is an output property.
@@ -61,6 +68,44 @@ module PoisePython
       def python_environment
         {}
       end
+
+      private
+
+      # Install the Python runtime. Must be implemented by subclass.
+      #
+      # @abstract
+      # @return [void]
+      def install_python
+        raise NotImplementedError
+      end
+
+      # Uninstall the Python runtime. Must be implemented by subclass.
+      #
+      # @abstract
+      # @return [void]
+      def uninstall_python
+        raise NotImplementedError
+      end
+
+      # Install pip in to the Python runtime.
+      #
+      # @return [void]
+      def install_pip
+        return unless options[:pip_version]
+        # If there is a : in the version, use it as a URL.
+        pip_version = options[:pip_version]
+        is_url = pip_version.is_a?(String) && pip_version.include?(':')
+        python_runtime_pip new_resource.name do
+          parent new_resource
+          # If the version is `true`, don't pass it at all.
+          version pip_version if !is_url && pip_version.is_a?(String)
+          get_pip_url pip_version if is_url
+        end
+      end
+
+      def install_setuptools
+      end
+
     end
   end
 end

@@ -36,9 +36,44 @@ module PoisePython
         actions(:install, :uninstall)
 
         # @!attribute version
-        #   Version of Python to install.
+        #   Version of Python to install. The version is prefix-matched so `'2'`
+        #   will install the most recent Python 2.x, and so on.
         #   @return [String]
+        #   @example Install any version
+        #     python_runtime 'any' do
+        #       version ''
+        #     end
+        #   @example Install Python 2.7
+        #     python_runtime '2.7'
         attribute(:version, kind_of: String, name_attribute: true)
+        # @!attribute pip_version
+        #   Version of pip to install. If set to `true`, the latest available
+        #   pip will be used. If set to `false`, pip will not be installed. If
+        #   set to a URL, that will be used as the URL to get-pip.py. If a
+        #   non-URL version is given, the get-pip.py installer will be
+        #   downloaded from the internet.
+        #   @note Actually setting a specfic version other than a URL is not
+        #     currently supported due to https://github.com/pypa/pip/issues/1087.
+        #     The name of the attribute is more aspirational than accurate.
+        #   @note Disabling the pip install may result in other resources being
+        #     non-functional.
+        #   @return [String, Boolean]
+        #   @example Install from a locally-hosted copy of get-pip.py
+        #     python_runtime '2' do
+        #       pip_version 'http://myserver/get-pip.py'
+        #     end
+        attribute(:pip_version, kind_of: [String, TrueClass, FalseClass], default: true)
+        # @!attribute setuptools_version
+        #   Version of Setuptools to install. It set to `true`, the latest
+        #   available version will be used. If set to `false`, no specfic version
+        #   will be installed.
+        attribute(:setuptools_version, kind_of: [String, TrueClass, FalseClass], default: true)
+        # @!attribute virtualenv_version
+        #   Version of Virtualenv to install. It set to `true`, the latest
+        #   available version will be used. If set to `false`, no specfic version
+        #   will be installed. Virtualenv will never be installed if the
+        #   built-in venv module is available.
+        attribute(:virtualenv_version, kind_of: [String, TrueClass, FalseClass], default: true)
 
         # The path to the `python` binary for this Python installation. This is
         # an output property.
