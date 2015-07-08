@@ -117,8 +117,13 @@ module PoisePython
         #
         # @return [void]
         def install_pip
-          # Already up to date, we're done here.
-          return if current_resource.version == new_resource.version
+          if new_resource.version
+            # Already up to date, we're done here.
+            return if current_resource.version == new_resource.version
+          else
+            # We don't wany a specific version, so just make a general check.
+            return if current_resource.version
+          end
 
           notifying_block do
             # Use pip to upgrade (or downgrade) itself.
