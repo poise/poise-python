@@ -24,7 +24,7 @@ require 'poise_python/python_providers/base'
 module PoisePython
   module PythonProviders
     class System < Base
-      include PoiseLanguages::SystemProviderMixin
+      include PoiseLanguages::System::Mixin
       provides(:system)
       packages('python', {
         debian: {
@@ -46,12 +46,20 @@ module PoisePython
       # Output value for the Python binary we are installing. Seems to match
       # package name on all platforms I've checked.
       def python_binary
-        ::File.join('', 'usr', 'bin', package_name)
+        ::File.join('', 'usr', 'bin', system_package_name)
       end
 
       private
 
-      def candiate_names(version)
+      def install_python
+        install_system_packages
+      end
+
+      def uninstall_python
+        uninstall_system_packages
+      end
+
+      def system_package_candidates(version)
         [].tap do |names|
           # For two (or more) digit versions.
           if match = version.match(/^(\d+\.\d+)/)
