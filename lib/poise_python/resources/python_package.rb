@@ -243,7 +243,7 @@ EOH
               memo[md[1].downcase] = md[2]
             end
             memo
-          end.tap {|d| Chef::Log.debug('!'*100); Chef::Log.debug(d.inspect) }
+          end
         end
 
         def parse_pip_list(text)
