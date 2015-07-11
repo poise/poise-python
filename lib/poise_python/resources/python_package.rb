@@ -14,6 +14,8 @@
 # limitations under the License.
 #
 
+require 'shellwords'
+
 require 'chef/mixin/which'
 require 'chef/provider/package'
 require 'chef/resource/package'
@@ -216,7 +218,7 @@ EOH
           full_cmd = if new_resource.options
             # We have to use a string for this case to be safe because the
             # options are a string and I don't want to try and parse that.
-            "#{new_resource.python_binary} #{runner.join(' ')} #{pip_command} #{new_resource.options} #{pip_options.join(' ')}"
+            "#{new_resource.python_binary} #{runner.join(' ')} #{pip_command} #{new_resource.options} #{Shellwords.join(pip_options)}"
           else
             # No special options, use an array to skip the extra /bin/sh.
             [new_resource.python_binary] + runner + [pip_command] + pip_options
