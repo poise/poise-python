@@ -28,3 +28,35 @@ describe 'python_runtime' do
     its(:content) { are_expected.to start_with '3.' }
   end
 end
+
+describe 'python_package' do
+  describe 'django' do
+    describe file('/root/django_sentinel') do
+      it { is_expected.to be_a_file }
+    end
+
+    describe file('/root/py2_django') do
+      it { is_expected.to be_a_file }
+    end
+
+    describe file('/root/py3_django') do
+      it { is_expected.to_not be_a_file }
+    end
+  end
+
+  describe 'pep8' do
+    describe file('/root/py2_pep8') do
+      it { is_expected.to_not be_a_file }
+    end
+
+    describe file('/root/py3_pep8') do
+      it { is_expected.to be_a_file }
+    end
+  end
+
+  describe 'setuptools' do
+    describe file('/root/setuptools_sentinel') do
+      it { is_expected.to_not be_a_file }
+    end
+  end
+end
