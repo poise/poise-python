@@ -41,6 +41,8 @@ module PoisePython
         notifying_block do
           install_python
           install_pip
+          install_setuptools
+          install_virtualenv
         end
       end
 
@@ -91,19 +93,51 @@ module PoisePython
       #
       # @return [void]
       def install_pip
-        return unless options[:pip_version]
+        pip_version_or_url = options[:pip_version]
+        return unless pip_version_or_url
         # If there is a : in the version, use it as a URL.
-        pip_version = options[:pip_version]
-        is_url = pip_version.is_a?(String) && pip_version.include?(':')
+        if pip_version_or_url.is_a?(String) && pip_version_or_url.include?(':')
+          pip_version = nil
+          pip_url = pip_version_or_url
+        else
+          pip_version = pip_version_or_url
+          pip_url = nil
+        end
+        Chef::Log.debug("[#{new_resource}] Installing pip #{pip_version || 'latest'}")
+        # Install or bootstrap pip.
         python_runtime_pip new_resource.name do
           parent new_resource
           # If the version is `true`, don't pass it at all.
-          version pip_version if !is_url && pip_version.is_a?(String)
-          get_pip_url pip_version if is_url
+          version pip_version if pip_version.is_a?(String)
+          get_pip_url pip_url if pip_url
         end
       end
 
       def install_setuptools
+        # Captured because #options conflicts with Chef::Resource::Package#options.
+        setuptools_version = options[:setuptools_version]
+        return unless setuptools_version
+        Chef::Log.debug("[#{new_resource}] Installing setuptools #{setuptools_version == true ? 'latest' : setuptools_version}")
+        # Install setuptools via pip.
+        python_package 'setuptools' do
+          parent_python new_resource
+          version setuptools_version if setuptools_version.is_a?(String)
+        end
+      end
+
+      def install_virtualenv
+        # Captured because #options conflicts with Chef::Resource::Package#options.
+        virtualenv_version = options[:virtualenv_version]
+        return unless virtualenv_version
+        # Check if the venv module exists.
+        cmd = shell_out([python_binary, '-m', 'venv', '-h'])
+        return unless cmd.error?
+        Chef::Log.debug("[#{new_resource}] Installing virtualenv #{virtualenv_version == true ? 'latest' : virtualenv_version}")
+        # Install virtualenv via pip.
+        python_package 'virtualenv' do
+          parent_python new_resource
+          version virtualenv_version if virtualenv_version.is_a?(String)
+        end
       end
 
     end
