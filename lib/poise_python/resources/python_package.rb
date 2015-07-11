@@ -68,14 +68,17 @@ except AttributeError:
 sys.exit(pip.main())
 EOH
 
-      # A `python_package` resource to manage Python installations.
+      # A `python_package` resource to manage Python installations using pip.
       #
       # @provides python_package
       # @action install
       # @action upgrade
       # @action uninstall
       # @example
-      #   TODO
+      #   python_package 'django' do
+      #     python '2'
+      #     version '1.8.3'
+      #   end
       class Resource < Chef::Resource::Package
         include Poise(parent: true)
         include Chef::Mixin::Which
@@ -94,6 +97,10 @@ EOH
         #   Parent Python installation.
         #   @return [PoisePython::Resources::PythonRuntime::Resource, nil]
         parent_attribute(:python, type: :python_runtime, optional: true)
+        # @!attribute python_binary
+        #   Path to the python binary to use for installation. Defaults to the
+        #   parent python_runtime if present, otherwise the first in $PATH.
+        #   @return [String]
         attribute(:python_binary, kind_of: String, default: lazy { default_python_binary })
 
         # Nicer name for the DSL.
@@ -110,18 +117,22 @@ EOH
           end
         end
 
-        # Upstream attributes we don't support.
+        # Upstream attribute we don't support. Sets are ignored and gets always
+        # return nil.
+        #
         # @api private
+        # @param arg [Object] Ignored
+        # @return [nil]
         def response_file(arg=nil)
           raise NoMethodError if arg
         end
 
-        # @api private
+        # (see #response_file)
         def response_file_variables(arg=nil)
-          raise NoMemoryError if arg
+          raise NoMethodError if arg
         end
 
-        # @api private
+        # (see #response_file)
         def source(arg=nil)
           raise NoMethodError if arg
         end
@@ -133,6 +144,10 @@ EOH
       class Provider < Chef::Provider::Package
         provides(:python_package)
 
+        # Load current and candidate versions for all needed packages.
+        #
+        # @api private
+        # @return [Chef::Resource]
         def load_current_resource
           @current_resource = new_resource.class.new(new_resource.name, run_context)
           current_resource.package_name(new_resource.package_name)
@@ -140,6 +155,13 @@ EOH
           current_resource
         end
 
+        # Populate current and candidate versions for all needed packages.
+        #
+        # @api private
+        # @param resource [PoisePython::Resources::PythonPackage::Resource]
+        #   Resource to load for.
+        # @param version [String, Array<String>] Current version(s) of package(s).
+        # @return [void]
         def check_package_versions(resource, version=new_resource.version)
           version_data = Hash.new {|hash, key| hash[key] = {current: nil, candidate: nil} }
           # Get the version for everything currently installed.
@@ -172,14 +194,29 @@ EOH
           end
         end
 
+        # Install package(s) using pip.
+        #
+        # @param name [String, Array<String>] Name(s) of package(s).
+        # @param version [String, Array<String>] Version(s) of package(s).
+        # @return [void]
         def install_package(name, version)
           pip_install(name, version, upgrade: false)
         end
 
+        # Upgrade package(s) using pip.
+        #
+        # @param name [String, Array<String>] Name(s) of package(s).
+        # @param version [String, Array<String>] Version(s) of package(s).
+        # @return [void]
         def upgrade_package(name, version)
           pip_install(name, version, upgrade: true)
         end
 
+        # Uninstall package(s) using pip.
+        #
+        # @param name [String, Array<String>] Name(s) of package(s).
+        # @param version [String, Array<String>] Version(s) of package(s).
+        # @return [void]
         def remove_package(name, version)
           pip_command('uninstall', %w{--yes} + [name].flatten)
         end
@@ -187,7 +224,7 @@ EOH
         private
 
         # Convert name(s) and version(s) to an array of pkg_resources.Requirement
-        # compatible strings.
+        # compatible strings. These are strings like "django" or "django==1.0".
         #
         # @param name [String, Array<String>] Name or names for the packages.
         # @param version [String, Array<String>] Version or versions for the
@@ -208,13 +245,12 @@ EOH
           end
         end
 
-        def pip_install(name, version, upgrade: false)
-          cmd = pip_requirements(name, version)
-          # Prepend --upgrade if needed.
-          cmd = %w{--upgrade} + cmd if upgrade
-          pip_command('install', cmd)
-        end
-
+        # Run a pip command.
+        #
+        # @param pip_command [String] The pip subcommand to run (eg. install).
+        # @param pip_options [Array<String>] Options for the pip command.
+        # @param opts [Hash] Mixlib::ShellOut options.
+        # @return [Mixlib::ShellOut]
         def pip_command(pip_command, pip_options=[], opts={})
           runner = opts.delete(:pip_runner) || %w{-m pip}
           full_cmd = if new_resource.options
@@ -235,10 +271,35 @@ EOH
           shell_out_with_timeout!(full_cmd, opts)
         end
 
+        # Run `pip install` to install a package(s).
+        #
+        # @param name [String, Array<String>] Name(s) of package(s) to install.
+        # @param version [String, Array<String>] Version(s) of package(s) to
+        #   install.
+        # @param upgrade [Boolean] Use upgrade mode?
+        # @return [Mixlib::ShellOut]
+        def pip_install(name, version, upgrade: false)
+          cmd = pip_requirements(name, version)
+          # Prepend --upgrade if needed.
+          cmd = %w{--upgrade} + cmd if upgrade
+          pip_command('install', cmd)
+        end
+
+        # Run my hacked version of `pip list --outdated` with a specific set of
+        # package requirements.
+        #
+        # @see #pip_requirements
+        # @param requirements [Array<String>] Pip-formatted package requirements.
+        # @return [Mixlib::ShellOut]
         def pip_outdated(requirements)
           pip_command('list', %w{--outdated} + requirements, input: PIP_HACK_SCRIPT, pip_runner: %w{-})
         end
 
+        # Parse the output from `pip list --outdate`. Returns a hash of package
+        # key to candidate version.
+        #
+        # @param text [String] Output to parse.
+        # @return [Hash<String, String>]
         def parse_pip_outdated(text)
           text.split(/\n/).inject({}) do |memo, line|
             # Example of a line:
@@ -252,6 +313,11 @@ EOH
           end
         end
 
+        # Parse the output from `pip list`. Returns a hash of package key to
+        # current version.
+        #
+        # @param text [String] Output to parse.
+        # @return [Hash<String, String>]
         def parse_pip_list(text)
           text.split(/\n/).inject({}) do |memo, line|
             # Example of a line:
