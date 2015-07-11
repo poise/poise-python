@@ -141,15 +141,17 @@ EOH
         end
 
         def check_package_versions(resource, version=new_resource.version)
+          version_data = Hash.new {|hash, key| hash[key] = {current: nil, candidate: nil} }
           # Get the version for everything currently installed.
           list = pip_command('list').stdout
-          version_data = parse_pip_list(list)
+          parse_pip_list(list).each do |name, current|
+            # Merge current versions in to the data.
+            version_data[name][:current] = current
+          end
           # Check for newer candidates.
           outdated = pip_outdated(pip_requirements(resource.package_name, version)).stdout
           parse_pip_outdated(outdated).each do |name, candidate|
-            # Merge candidates in to the existing versions. Might need to make
-            # blank entry to a package that will be new.
-            version_data[name] ||= {current: nil, candidate: nil}
+            # Merge candidates in to the existing versions.
             version_data[name][:candidate] = candidate
           end
           # Populate the current resource and candidate versions. Youch this is
@@ -159,14 +161,14 @@ EOH
             versions = []
             [resource.package_name].flatten.each do |name|
               ver = version_data[name]
-              versions << (ver && ver[:current])
-              @candidate_version << (ver && ver[:candidate])
+              versions << ver[:current]
+              @candidate_version << ver[:candidate]
             end
             resource.version(versions)
           else
             ver = version_data[resource.package_name]
-            resource.version(ver && ver[:current])
-            @candidate_version = ver && ver[:candidate]
+            resource.version(ver[:current])
+            @candidate_version = ver[:candidate]
           end
         end
 
@@ -253,7 +255,7 @@ EOH
             # Example of a line:
             # boto (2.25.0)
             if md = line.match(/^(\S+)\s+\(([^\s,]+).*\)$/i)
-              memo[md[1].downcase] = {current: md[2], candidate: md[2]}
+              memo[md[1].downcase] = md[2]
             end
             memo
           end
