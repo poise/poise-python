@@ -40,6 +40,8 @@ module PoisePython
       def action_install
         notifying_block do
           install_python
+        end
+        notifying_block do
           install_pip
           install_setuptools
           install_virtualenv
