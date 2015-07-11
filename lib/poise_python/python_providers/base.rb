@@ -38,9 +38,12 @@ module PoisePython
       #
       # @return [void]
       def action_install
+        # First inner converge for the Python install.
         notifying_block do
           install_python
         end
+        # Second inner converge for the support tools. This is needed because
+        # we run a python command to check if venv is available.
         notifying_block do
           install_pip
           install_setuptools
