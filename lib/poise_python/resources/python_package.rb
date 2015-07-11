@@ -245,6 +245,8 @@ EOH
             # boto (Current: 2.25.0 Latest: 2.38.0 [wheel])
             if md = line.match(/^(\S+)\s+\(.*?latest:\s+([^\s,]+).*\)$/i)
               memo[md[1].downcase] = md[2]
+            else
+              Chef::Log.debug("[#{new_resource}] Unparsable line in pip outdated: #{line}")
             end
             memo
           end
@@ -256,6 +258,8 @@ EOH
             # boto (2.25.0)
             if md = line.match(/^(\S+)\s+\(([^\s,]+).*\)$/i)
               memo[md[1].downcase] = md[2]
+            else
+              Chef::Log.debug("[#{new_resource}] Unparsable line in pip list: #{line}")
             end
             memo
           end
