@@ -38,3 +38,11 @@ end
 python_execute '/root/poise_python_test.py /root/py3' do
   python '3'
 end
+
+python_package 'django' do
+  python '2'
+end
+
+python_package ['pep8', 'pytz'] do
+  python '3'
+end

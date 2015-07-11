@@ -14,6 +14,7 @@
 # limitations under the License.
 #
 
+require 'poise_python/resources/python_package'
 require 'poise_python/resources/python_runtime'
 require 'poise_python/resources/python_runtime_pip'
 require 'poise_python/resources/python_execute'
