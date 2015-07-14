@@ -160,13 +160,13 @@ EOH
             @candidate_version = []
             versions = []
             [resource.package_name].flatten.each do |name|
-              ver = version_data[name]
+              ver = version_data[name.downcase]
               versions << ver[:current]
               @candidate_version << ver[:candidate]
             end
             resource.version(versions)
           else
-            ver = version_data[resource.package_name]
+            ver = version_data[resource.package_name.downcase]
             resource.version(ver[:current])
             @candidate_version = ver[:candidate]
           end
