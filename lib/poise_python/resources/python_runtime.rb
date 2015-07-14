@@ -65,15 +65,22 @@ module PoisePython
         attribute(:pip_version, kind_of: [String, TrueClass, FalseClass], default: true)
         # @!attribute setuptools_version
         #   Version of Setuptools to install. It set to `true`, the latest
-        #   available version will be used. If set to `false`, no specfic version
-        #   will be installed.
+        #   available version will be used. If set to `false`, setuptools will
+        #   not be installed.
         attribute(:setuptools_version, kind_of: [String, TrueClass, FalseClass], default: true)
         # @!attribute virtualenv_version
         #   Version of Virtualenv to install. It set to `true`, the latest
-        #   available version will be used. If set to `false`, no specfic version
-        #   will be installed. Virtualenv will never be installed if the
-        #   built-in venv module is available.
+        #   available version will be used. If set to `false`, virtualenv will
+        #   not be installed. Virtualenv will never be installed if the built-in
+        #   venv module is available.
+        #   @note Disabling the virtualenv install may result in other resources
+        #     being non-functional.
         attribute(:virtualenv_version, kind_of: [String, TrueClass, FalseClass], default: true)
+        # @!attribute wheel_version
+        #   Version of Wheel to install. It set to `true`, the latest
+        #   available version will be used. If set to `false`, wheel will not
+        #   be installed.
+        attribute(:wheel_version, kind_of: [String, TrueClass, FalseClass], default: true)
 
         # The path to the `python` binary for this Python installation. This is
         # an output property.

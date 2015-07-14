@@ -31,6 +31,7 @@ module PoisePython
           setuptools_version: new_resource.setuptools_version,
           version: new_resource.version,
           virtualenv_version: new_resource.virtualenv_version,
+          wheel_version: new_resource.wheel_version,
         })
       end
 
@@ -47,6 +48,7 @@ module PoisePython
         notifying_block do
           install_pip
           install_setuptools
+          install_wheel
           install_virtualenv
         end
       end
@@ -127,6 +129,18 @@ module PoisePython
         python_package 'setuptools' do
           parent_python new_resource
           version setuptools_version if setuptools_version.is_a?(String)
+        end
+      end
+
+      def install_wheel
+        # Captured because #options conflicts with Chef::Resource::Package#options.
+        wheel_version = options[:wheel_version]
+        return unless wheel_version
+        Chef::Log.debug("[#{new_resource}] Installing setuptools #{wheel_version == true ? 'latest' : wheel_version}")
+        # Install wheel via pip.
+        python_package 'wheel' do
+          parent_python new_resource
+          version wheel_version if wheel_version.is_a?(String)
         end
       end
 
