@@ -37,11 +37,6 @@ module PoisePython
       #   Parent Python installation.
       #   @return [PoisePython::Resources::PythonRuntime::Resource, nil]
       parent_attribute(:python, type: :python_runtime, optional: true)
-      # @!attribute python_binary
-      #   Path to the python binary to use for installation. Defaults to the
-      #   parent python_runtime if present, otherwise the first in $PATH.
-      #   @return [String]
-      # attribute(:python_binary, kind_of: String, default: lazy { default_python_binary })
       # @!attribute timeout
       #   Timeout for Python commands in seconds. Defauls to 900 (5 minutes).
       #   @return [Integer]
