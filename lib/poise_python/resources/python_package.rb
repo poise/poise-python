@@ -21,6 +21,8 @@ require 'chef/provider/package'
 require 'chef/resource/package'
 require 'poise'
 
+require 'poise_python/python_command_mixin'
+
 
 module PoisePython
   module Resources
@@ -80,8 +82,7 @@ EOH
       #     version '1.8.3'
       #   end
       class Resource < Chef::Resource::Package
-        include Poise(parent: true)
-        include Chef::Mixin::Which
+        include PoisePython::PythonCommandMixin
         provides(:python_package)
 
         def initialize(*args)
@@ -91,30 +92,6 @@ EOH
           # We don't have these actions.
           @allowed_actions.delete(:purge)
           @allowed_actions.delete(:reconfig)
-        end
-
-        # @!attribute parent_python
-        #   Parent Python installation.
-        #   @return [PoisePython::Resources::PythonRuntime::Resource, nil]
-        parent_attribute(:python, type: :python_runtime, optional: true)
-        # @!attribute python_binary
-        #   Path to the python binary to use for installation. Defaults to the
-        #   parent python_runtime if present, otherwise the first in $PATH.
-        #   @return [String]
-        attribute(:python_binary, kind_of: String, default: lazy { default_python_binary })
-
-        # Nicer name for the DSL.
-        alias_method :python, :parent_python
-
-        # Compute the default path to the Python binary.
-        #
-        # @return [String]
-        def default_python_binary
-          if parent_python
-            parent_python.python_binary
-          else
-            which('python')
-          end
         end
 
         # Upstream attribute we don't support. Sets are ignored and gets always
@@ -142,6 +119,7 @@ EOH
       #
       # @see Resource
       class Provider < Chef::Provider::Package
+        include PoisePython::PythonCommandMixin
         provides(:python_package)
 
         # Load current and candidate versions for all needed packages.
@@ -256,19 +234,13 @@ EOH
           full_cmd = if new_resource.options
             # We have to use a string for this case to be safe because the
             # options are a string and I don't want to try and parse that.
-            "#{new_resource.python_binary} #{runner.join(' ')} #{pip_command} #{new_resource.options} #{Shellwords.join(pip_options)}"
+            "##{runner.join(' ')} #{pip_command} #{new_resource.options} #{Shellwords.join(pip_options)}"
           else
             # No special options, use an array to skip the extra /bin/sh.
-            [new_resource.python_binary] + runner + [pip_command] + pip_options
+            runner + [pip_command] + pip_options
           end
 
-          # Inject environment variables if needed.
-          if new_resource.parent_python
-            opts[:environment] = new_resource.parent_python.python_environment.merge(opts[:environment] || {})
-          end
-
-          # Run the command.
-          shell_out_with_timeout!(full_cmd, opts)
+          python_shell_out!(full_cmd, opts)
         end
 
         # Run `pip install` to install a package(s).
