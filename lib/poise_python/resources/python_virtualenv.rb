@@ -1,0 +1,144 @@
+#
+# Copyright 2015, Noah Kantrowitz
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+require 'chef/mixin/which'
+require 'poise'
+
+require 'poise_python/resources/python_runtime'
+require 'poise_python/python_providers/base'
+
+require 'poise_python/python_command_mixin'
+
+
+
+module PoisePython
+  module Resources
+    # (see PythonPackage::Resource)
+    # @since 1.0.0
+    module PythonVirtualenv
+      # A `python_virtualenv` resource to manage Python virtual environments.
+      #
+      # @provides python_virtualenv
+      # @action create
+      # @action delete
+      # @example
+      #   python_virtualenv '/opt/myapp'
+      class Resource < PythonRuntime::Resource
+        include PoisePython::PythonCommandMixin
+        provides(:python_virtualenv)
+        # Add create and delete actions as more semantically relevant aliases.
+        default_action(:create)
+        actions(:create, :delete)
+
+        attribute(:path, kind_of: String, name_attribute: true)
+        attribute(:system_site_packages, equal_to: [true, false], default: false)
+
+        # Lock the default provider.
+        #
+        # @api private
+        def initialize(*args)
+          super
+          # Sidestep all the normal provider lookup stuffs. This is kind of
+          # gross but it will do for now. The hard part is that the base classes
+          # for the resource and provider are using Poise::Inversion, which we
+          # don't want to use for python_virtualenv.
+          @provider = Provider
+        end
+
+        # Upstream attribute we don't support. Sets are ignored and gets always
+        # return nil.
+        #
+        # @api private
+        # @param arg [Object] Ignored
+        # @return [nil]
+        def version(arg=nil)
+          raise NoMethodError if arg
+        end
+
+        # (see #version)
+        def virtualenv_version(arg=nil)
+          raise NoMethodError if arg
+        end
+      end
+
+      class Provider < PoisePython::PythonProviders::Base
+        include PoisePython::PythonCommandMixin
+        provides(:python_virtualenv)
+
+        # Alias our actions. Slightly annoying that they will show in
+        # tracebacks with the original names, but oh well.
+        alias_method :action_create, :action_install
+        alias_method :action_delete, :action_uninstall
+
+        def python_binary
+          ::File.join(new_resource.path, 'bin', 'python')
+        end
+
+        def python_environment
+          if new_resource.parent_python
+            new_resource.parent_python.python_environment
+          else
+            {}
+          end
+        end
+
+        private
+
+        def install_python
+          return if ::File.exist?(new_resource.path)
+
+          cmd = python_shell_out(%w{-m venv -h})
+          if cmd.error?
+            converge_by("Creating virtualenv at #{new_resource.path}") do
+              create_virtualenv
+            end
+          else
+            converge_by("Creating venv at #{new_resource.path}") do
+              create_venv
+            end
+          end
+        end
+
+        def uninstall_python
+          directory new_resource.path do
+            action :delete
+            recursive true
+          end
+        end
+
+        def install_virtualenv
+          # This space left intentionally blank.
+        end
+
+        def create_virtualenv
+          # @todo system-site-packages support
+          python_shell_out!(['-m', 'virtualenv', new_resource.path], environment: {
+            # Use the environment variables to cope with older virtualenv not
+            # supporting --no-wheel. The env var will be ignored.
+            'VIRTUALENV_NO_PIP' => '1',
+            'VIRTUALENV_NO_SETUPTOOLS' => '1',
+            'VIRTUALENV_NO_WHEEL' => '1',
+          })
+        end
+
+        def create_venv
+          raise NotImplementedError
+        end
+
+      end
+    end
+  end
+end
