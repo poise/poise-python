@@ -47,6 +47,14 @@ module PoisePython
 
         # Nicer name for the DSL.
         alias_method :python, :parent_python
+
+        # Wrapper for setting the parent to be a virtualenv.
+        #
+        # @param name [String] Name of the virtualenv resource.
+        # @return [void]
+        def virtualenv(name)
+          parent_python("python_virtualenv[#{name}]")
+        end
       end
 
       # The default provider for `python_execute`.
