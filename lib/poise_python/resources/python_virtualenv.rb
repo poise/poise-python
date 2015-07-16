@@ -23,7 +23,7 @@ require 'poise_python'
 
 module PoisePython
   module Resources
-    # (see PythonPackage::Resource)
+    # (see PythonVirtualenv::Resource)
     # @since 1.0.0
     module PythonVirtualenv
       # A `python_virtualenv` resource to manage Python virtual environments.
