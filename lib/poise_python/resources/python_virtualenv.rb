@@ -17,11 +17,8 @@
 require 'chef/mixin/which'
 require 'poise'
 
-require 'poise_python/resources/python_runtime'
-require 'poise_python/python_providers/base'
-
-require 'poise_python/python_command_mixin'
-
+# Break a require loop by letting autoload work its magic.
+require 'poise_python'
 
 
 module PoisePython

@@ -23,6 +23,8 @@ module PoisePython
   #
   # @since 1.0.0
   module PythonProviders
+    autoload :Base, 'poise_python/python_providers/base'
+
     Chef::Platform::ProviderPriorityMap.instance.priority(:python_runtime, [
       PoisePython::PythonProviders::Scl,
       PoisePython::PythonProviders::System,
