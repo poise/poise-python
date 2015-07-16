@@ -17,56 +17,82 @@
 require 'serverspec'
 set :backend, :exec
 
-describe 'python_runtime' do
-  describe file('/root/py2') do
-    it { is_expected.to be_a_file }
-    its(:content) { are_expected.to start_with '2.' }
+# Set up the shared example for python_runtime_test.
+RSpec.shared_examples 'a python_runtime_test' do |python_name, version=nil|
+  let(:python_name) { python_name }
+  let(:python_path) { File.join('', 'root', "python_test_#{python_name}") }
+  # Helper for all the file checks.
+  def self.assert_file(rel_path, should_exist=true, &block)
+    describe rel_path do
+      subject { file(File.join(python_path, rel_path)) }
+      # Do nothing for nil.
+      if should_exist == true
+        it { is_expected.to be_a_file }
+      elsif should_exist == false
+        it { is_expected.to_not exist }
+      end
+      instance_eval(&block) if block
+    end
   end
 
-  describe file('/root/py3') do
-    it { is_expected.to be_a_file }
-    its(:content) { are_expected.to start_with '3.' }
+  describe 'python_runtime' do
+    assert_file('version') do
+      its(:content) { is_expected.to start_with version } if version
+    end
+  end
+
+  describe 'python_package' do
+    describe 'django' do
+      assert_file('import_django_before', false)
+      assert_file('import_django_mid')
+      assert_file('import_django_after', false)
+      assert_file('sentinel_django')
+      assert_file('sentinel_django2', false)
+    end
+
+    describe 'setuptools' do
+      assert_file('sentinel_setuptools', false)
+    end
+
+    describe 'pep8' do
+      assert_file('import_pep8')
+    end
+
+    describe 'pytz' do
+      assert_file('import_pytz')
+    end
+  end
+
+  describe 'python_virtualenv' do
+    assert_file('venv', nil) do
+      it { is_expected.to be_a_directory }
+    end
+    assert_file('import_flask', false)
+    assert_file('import_flask_venv')
+  end
+
+  describe 'python_requirements' do
+    assert_file('import_requests') do
+      its(:content) { is_expected.to eq '2.7.0' }
+    end
+    assert_file('import_six') do
+      its(:content) { is_expected.to eq '1.8.0' }
+    end
   end
 end
 
-describe 'python_package' do
-  describe 'django' do
-    describe file('/root/django_sentinel') do
-      it { is_expected.to be_a_file }
-    end
+describe 'python 2' do
+  it_should_behave_like 'a python_runtime_test', '2', '2'
+end
 
-    describe file('/root/py2_django') do
-      it { is_expected.to be_a_file }
-    end
+describe 'python 3' do
+  it_should_behave_like 'a python_runtime_test', '3', '3'
+end
 
-    describe file('/root/py3_django') do
-      it { is_expected.to_not be_a_file }
-    end
-  end
+describe 'system provider' do
+  it_should_behave_like 'a python_runtime_test', 'system'
+end
 
-  describe 'pep8' do
-    describe file('/root/py2_pep8') do
-      it { is_expected.to_not be_a_file }
-    end
-
-    describe file('/root/py3_pep8') do
-      it { is_expected.to be_a_file }
-    end
-  end
-
-  describe 'setuptools' do
-    describe file('/root/setuptools_sentinel') do
-      it { is_expected.to_not be_a_file }
-    end
-  end
-
-  describe 'virtualenv /root/venv2' do
-    describe file('/root/venv_flask') do
-      it { is_expected.to be_a_file }
-    end
-
-    describe file('/root/py2_flask') do
-      it { is_expected.to_not be_a_file }
-    end
-  end
+describe 'scl provider', if: os[:family] == 'redhat' do
+  it_should_behave_like 'a python_runtime_test', 'scl'
 end
