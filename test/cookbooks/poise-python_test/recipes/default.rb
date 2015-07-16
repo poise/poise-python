@@ -33,27 +33,15 @@ open(sys.argv[1], 'w').write(platform.python_version())
 EOH
 end
 
-file '/root/poise_python_test_django.py' do
+file '/root/poise_python_test_import.py' do
   user 'root'
   group 'root'
   mode '644'
   content <<-EOH
 try:
-    import django, sys
-    open(sys.argv[1], 'w').write(django.__version__)
-except ImportError:
-    pass
-EOH
-end
-
-file '/root/poise_python_test_pep8.py' do
-  user 'root'
-  group 'root'
-  mode '644'
-  content <<-EOH
-try:
-    import pep8, sys
-    open(sys.argv[1], 'w').write(pep8.__version__)
+    import sys
+    mod = __import__(sys.argv[1])
+    open(sys.argv[2], 'w').write(mod.__version__)
 except ImportError:
     pass
 EOH
@@ -80,11 +68,11 @@ python_package 'django' do
 end
 
 # Log Django versions.
-python_execute '/root/poise_python_test_django.py /root/py2_django' do
+python_execute '/root/poise_python_test_import.py django /root/py2_django' do
   python '2'
 end
 
-python_execute '/root/poise_python_test_django.py /root/py3_django' do
+python_execute '/root/poise_python_test_import.py django /root/py3_django' do
   python '3'
 end
 
@@ -94,11 +82,11 @@ python_package ['pep8', 'pytz'] do
 end
 
 # Log pep8 versions.
-python_execute '/root/poise_python_test_pep8.py /root/py2_pep8' do
+python_execute '/root/poise_python_test_import.py pep8 /root/py2_pep8' do
   python '2'
 end
 
-python_execute '/root/poise_python_test_pep8.py /root/py3_pep8' do
+python_execute '/root/poise_python_test_import.py pep8 /root/py3_pep8' do
   python '3'
 end
 
@@ -111,4 +99,21 @@ end
 python_package 'setuptools' do
   python '2'
   notifies :create, 'file[/root/setuptools_sentinel]', :immediately
+end
+
+# Create a virtualenv using Python 2.
+python_virtualenv '/root/venv2' do
+  python '2'
+end
+
+python_package 'Flask' do
+  virtualenv '/root/venv2'
+end
+
+python_execute '/root/poise_python_test_import.py flask /root/py2_flask' do
+  python '2'
+end
+
+python_execute '/root/poise_python_test_import.py flask /root/venv_flask' do
+  virtualenv '/root/venv2'
 end

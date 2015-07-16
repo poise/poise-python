@@ -59,4 +59,14 @@ describe 'python_package' do
       it { is_expected.to_not be_a_file }
     end
   end
+
+  describe 'virtualenv /root/venv2' do
+    describe file('/root/venv_flask') do
+      it { is_expected.to be_a_file }
+    end
+
+    describe file('/root/py2_flask') do
+      it { is_expected.to_not be_a_file }
+    end
+  end
 end
