@@ -14,7 +14,6 @@
 # limitations under the License.
 #
 
-require 'chef/mixin/which'
 require 'poise'
 
 # Break a require loop by letting autoload work its magic.
