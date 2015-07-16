@@ -70,6 +70,10 @@ module PoisePython
         end
       end
 
+      # The default provider for `python_virtualenv`.
+      #
+      # @see Resource
+      # @provides python_virtualenv
       class Provider < PoisePython::PythonProviders::Base
         include PoisePython::PythonCommandMixin
         provides(:python_virtualenv)
@@ -99,11 +103,11 @@ module PoisePython
           cmd = python_shell_out(%w{-m venv -h})
           if cmd.error?
             converge_by("Creating virtualenv at #{new_resource.path}") do
-              create_virtualenv
+              create_virtualenv(%w{virtualenv})
             end
           else
             converge_by("Creating venv at #{new_resource.path}") do
-              create_venv
+              create_virtualenv(%w{venv --without-pip})
             end
           end
         end
@@ -115,23 +119,29 @@ module PoisePython
           end
         end
 
+        # Don't install virtualenv inside virtualenv.
+        #
+        # @api private
+        # @return [void]
         def install_virtualenv
           # This space left intentionally blank.
         end
 
-        def create_virtualenv
-          # @todo system-site-packages support
-          python_shell_out!(['-m', 'virtualenv', new_resource.path], environment: {
+        # Create a virtualenv using virtualenv or venv.
+        #
+        # @param driver [Array<String>] Command snippet to actually make it.
+        # @return [void]
+        def create_virtualenv(driver)
+          cmd = %w{-m} + driver
+          cmd << '--system-site-packages' if new_resource.system_site_packages
+          cmd << new_resource.path
+          python_shell_out!(cmd, environment: {
             # Use the environment variables to cope with older virtualenv not
             # supporting --no-wheel. The env var will be ignored.
             'VIRTUALENV_NO_PIP' => '1',
             'VIRTUALENV_NO_SETUPTOOLS' => '1',
             'VIRTUALENV_NO_WHEEL' => '1',
           })
-        end
-
-        def create_venv
-          raise NotImplementedError
         end
 
       end
