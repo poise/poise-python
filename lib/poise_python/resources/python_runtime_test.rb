@@ -110,11 +110,11 @@ module PoisePython
             end
 
             # Install a package inside a virtualenv.
-            python_package 'Pygments' do
+            python_package 'Pytest' do
               virtualenv ::File.join(new_resource.path, 'venv')
             end
-            test_import('pygments')
-            test_import('pygments', 'pygments_venv', python: nil, virtualenv: ::File.join(new_resource.path, 'venv'))
+            test_import('pytest')
+            test_import('pytest', 'pytest_venv', python: nil, virtualenv: ::File.join(new_resource.path, 'venv'))
 
             # Create and install a requirements file.
             file ::File.join(new_resource.path, 'requirements.txt') do

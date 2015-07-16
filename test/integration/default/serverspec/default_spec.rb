@@ -67,8 +67,8 @@ RSpec.shared_examples 'a python_runtime_test' do |python_name, version=nil|
     assert_file('venv', nil) do
       it { is_expected.to be_a_directory }
     end
-    assert_file('import_pygments', false)
-    assert_file('import_pygments_venv')
+    assert_file('import_pytest', false)
+    assert_file('import_pytest_venv')
   end
 
   describe 'python_requirements' do
