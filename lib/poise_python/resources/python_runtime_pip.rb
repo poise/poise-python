@@ -100,6 +100,8 @@ module PoisePython
             get_pip = Chef::HTTP.new(new_resource.get_pip_url).get('')
             # Write it to the temp file.
             temp.write(get_pip)
+            # Close the file to flush it.
+            temp.close
             # Run the install. This probably needs some handling for proxies et
             # al. Disable setuptools and wheel as we will install those later.
             # Use the environment vars instead of CLI arguments so I don't have
