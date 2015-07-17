@@ -14,11 +14,7 @@
 # limitations under the License.
 #
 
-# Default inversion options.
-default['poise-python']['provider'] = 'auto'
-default['poise-python']['options'] = {}
-
-# Used for the default recipe.
-default['poise-python']['install_python2'] = true
-default['poise-python']['install_python3'] = false
-default['poise-python']['install_pypy'] = false
+# Default runtimes.
+python_runtime '2' if node['poise-python']['install_python2']
+python_runtime '3' if node['poise-python']['install_python3']
+python_runtime 'pypy' if node['poise-python']['install_pypy']
