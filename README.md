@@ -83,8 +83,8 @@ python_runtime '2'
 
 The `poise-python` library offers an additional way to pass configuration
 information to the final provider called "options". Options are key/value pairs
-that are passed down to the ruby_runtime provider and can be used to control how it
-installs Ruby. These can be set in the `python_runtime`
+that are passed down to the `python_runtime` provider and can be used to control how it
+installs Python. These can be set in the `python_runtime`
 resource using the `options` method, in node attributes or via the
 `python_runtime_options` resource. The options from all sources are merged
 together in to a single hash.
