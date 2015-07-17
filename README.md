@@ -325,6 +325,10 @@ end
 * `folder` – Folder to install PyPy in. *(default: /opt/<package name>)*
 * `url` – URL to download the package from. *(default: automatic)*
 
+### `deadsnakes`
+
+*Coming soon!*
+
 ## Sponsors
 
 Development sponsored by [Bloomberg](http://www.bloomberg.com/company/technology/).
