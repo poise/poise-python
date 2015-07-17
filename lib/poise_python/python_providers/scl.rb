@@ -53,20 +53,22 @@ module PoisePython
         },
       })
 
-      def install_python
-        install_scl_package
-      end
-
-      def uninstall_python
-        uninstall_scl_package
-      end
-
       def python_binary
         ::File.join(scl_folder, 'root', 'usr', 'bin', 'python')
       end
 
       def python_environment
         scl_environment
+      end
+
+      private
+
+      def install_python
+        install_scl_package
+      end
+
+      def uninstall_python
+        uninstall_scl_package
       end
 
     end
