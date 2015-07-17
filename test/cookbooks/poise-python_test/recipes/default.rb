@@ -27,12 +27,12 @@ python_runtime_test 'pypy'
 
 # Ignoring CentOS 6 because system Python there is 2.6 which doesn't support -m.
 if platform_family?('rhel') && node['platform_version'].start_with?('6')
+  file '/no_system'
+else
   python_runtime_test 'system' do
     version ''
     runtime_provider :system
   end
-else
-  file '/no_system'
 end
 
 if platform_family?('rhel')
