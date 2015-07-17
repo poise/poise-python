@@ -93,10 +93,10 @@ describe 'pypy' do
   it_should_behave_like 'a python_runtime_test', 'pypy'
 end
 
-describe 'system provider' do
+describe 'system provider', unless: File.exist?('/no_system') do
   it_should_behave_like 'a python_runtime_test', 'system'
 end
 
-describe 'scl provider', if: os[:family] == 'redhat' do
+describe 'scl provider', unless: File.exist?('/no_scl') do
   it_should_behave_like 'a python_runtime_test', 'scl'
 end
