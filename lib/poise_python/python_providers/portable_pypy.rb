@@ -83,11 +83,11 @@ module PoisePython
       end
 
       def pypy_folder
-        ::File.join('', 'opt', pypy_package)
+        options['folder'] || ::File.join('', 'opt', pypy_package)
       end
 
       def pypy_package_url
-        "https://bitbucket.org/squeaky/portable-pypy/downloads/#{pypy_package}.tar.bz2"
+        options['url'] || "https://bitbucket.org/squeaky/portable-pypy/downloads/#{pypy_package}.tar.bz2"
       end
 
     end
