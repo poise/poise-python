@@ -23,6 +23,8 @@ python_runtime_test '2'
 
 python_runtime_test '3'
 
+python_runtime_test 'pypy'
+
 python_runtime_test 'system' do
   version ''
   runtime_provider :system

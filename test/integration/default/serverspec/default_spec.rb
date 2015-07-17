@@ -89,6 +89,10 @@ describe 'python 3' do
   it_should_behave_like 'a python_runtime_test', '3', '3'
 end
 
+describe 'pypy' do
+  it_should_behave_like 'a python_runtime_test', 'pypy'
+end
+
 describe 'system provider' do
   it_should_behave_like 'a python_runtime_test', 'system'
 end

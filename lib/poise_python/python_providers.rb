@@ -14,6 +14,7 @@
 # limitations under the License.
 #
 
+require 'poise_python/python_providers/portable_pypy'
 require 'poise_python/python_providers/scl'
 require 'poise_python/python_providers/system'
 
@@ -26,6 +27,7 @@ module PoisePython
     autoload :Base, 'poise_python/python_providers/base'
 
     Chef::Platform::ProviderPriorityMap.instance.priority(:python_runtime, [
+      PoisePython::PythonProviders::PortablePyPy,
       PoisePython::PythonProviders::Scl,
       PoisePython::PythonProviders::System,
     ])
