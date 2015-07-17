@@ -39,7 +39,13 @@ module PoisePython
         default_action(:create)
         actions(:create, :delete)
 
+        # @!attribute path
+        #   Path to create the environment at.
+        #   @return [String]
         attribute(:path, kind_of: String, name_attribute: true)
+        # @!attribute system_site_packages
+        #   Enable or disable visibilty of system packages in the environment.
+        #   @return [Boolean]
         attribute(:system_site_packages, equal_to: [true, false], default: false)
 
         # Lock the default provider.

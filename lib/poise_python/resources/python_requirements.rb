@@ -38,6 +38,10 @@ module PoisePython
         provides(:python_requirements)
         actions(:install, :upgrade)
 
+        # @!attribute path
+        #   Path to the requirements file, or a folder containing the
+        #   requirements file.
+        #   @return [String]
         attribute(:path, kind_of: String, name_attribute: true)
       end
 
