@@ -230,7 +230,7 @@ EOH
         # @param opts [Hash] Mixlib::ShellOut options.
         # @return [Mixlib::ShellOut]
         def pip_command(pip_command, pip_options=[], opts={})
-          runner = opts.delete(:pip_runner) || %w{-m pip}
+          runner = opts.delete(:pip_runner) || %w{-m pip.__main__}
           full_cmd = if new_resource.options
             # We have to use a string for this case to be safe because the
             # options are a string and I don't want to try and parse that.

@@ -71,7 +71,7 @@ module PoisePython
         # @param upgrade [Boolean] If we should use the --upgrade flag.
         # @return [void]
         def install_requirements(upgrade: false)
-          cmd = %w{-m pip install}
+          cmd = %w{-m pip.__main__ install}
           cmd << '--upgrade' if upgrade
           cmd << '--requirement'
           cmd << requirements_path

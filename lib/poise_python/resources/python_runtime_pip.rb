@@ -142,7 +142,7 @@ module PoisePython
         #
         # @return [String, nil]
         def pip_version
-          cmd = shell_out([new_resource.parent.python_binary, '-m', 'pip', '--version'], environment: new_resource.parent.python_environment)
+          cmd = shell_out([new_resource.parent.python_binary, '-m', 'pip.__main__', '--version'], environment: new_resource.parent.python_environment)
           if cmd.error?
             # Not installed, probably.
             nil
