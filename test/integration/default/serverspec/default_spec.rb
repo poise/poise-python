@@ -42,12 +42,12 @@ RSpec.shared_examples 'a python_runtime_test' do |python_name, version=nil|
   end
 
   describe 'python_package' do
-    describe 'django' do
-      assert_file('import_django_before', false)
-      assert_file('import_django_mid')
-      assert_file('import_django_after', false)
-      assert_file('sentinel_django')
-      assert_file('sentinel_django2', false)
+    describe 'sqlparse' do
+      assert_file('import_sqlparse_before', false)
+      assert_file('import_sqlparse_mid')
+      assert_file('import_sqlparse_after', false)
+      assert_file('sentinel_sqlparse')
+      assert_file('sentinel_sqlparse2', false)
     end
 
     describe 'setuptools' do

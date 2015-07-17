@@ -68,28 +68,28 @@ module PoisePython
             test_version
 
             # Test python_package.
-            python_package 'django remove before' do
+            python_package 'sqlparse remove before' do
               action :remove
-              package_name 'django'
+              package_name 'sqlparse'
               python new_resource.name
             end
-            test_import('django', 'django_before')
-            python_package 'django' do
+            test_import('sqlparse', 'sqlparse_before')
+            python_package 'sqlparse' do
               python new_resource.name
-              notifies :create, sentinel_file('django'), :immediately
+              notifies :create, sentinel_file('sqlparse'), :immediately
             end
-            test_import('django', 'django_mid')
-            python_package 'django again' do
-              package_name 'django'
+            test_import('sqlparse', 'sqlparse_mid')
+            python_package 'sqlparse again' do
+              package_name 'sqlparse'
               python new_resource.name
-              notifies :create, sentinel_file('django2'), :immediately
+              notifies :create, sentinel_file('sqlparse2'), :immediately
             end
-            python_package 'django remove after' do
+            python_package 'sqlparse remove after' do
               action :remove
-              package_name 'django'
+              package_name 'sqlparse'
               python new_resource.name
             end
-            test_import('django', 'django_after')
+            test_import('sqlparse', 'sqlparse_after')
 
             # Use setuptools to test something that should always be installed.
             python_package 'setuptools' do
