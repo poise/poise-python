@@ -29,8 +29,8 @@ python_requirements '/opt/myapp/requirements.txt'
 
 ## Supported Python Versions
 
-This cookbook can install Python 2.7, Python 3, and PyPy on all supported
-platforms (Debian, Ubuntu, RHEL, CentOS, Fedora).
+This cookbook can install at least Python 2.7, Python 3, and PyPy on all
+supported platforms (Debian, Ubuntu, RHEL, CentOS, Fedora).
 
 ## Resources
 
@@ -256,11 +256,69 @@ notifications will only be triggered if a package is actually installed.
 
 ## Python Providers
 
+### Common Options
+
+These provider options are supported by all providers.
+
+* `pip_version` – Override the pip version.
+* `setuptools_version` – Override the Setuptools version.
+* `version` – Override the Python version.
+* `virtualenv_version` – Override the virtualenv version.
+* `wheel_version` – Override the wheel version.
+
 ### `system`
+
+The `system` provider installs Python using system packages. This is currently
+only tested on platforms using `apt-get` and `yum` (Debian, Ubuntu, RHEL, CentOS
+Amazon Linux, and Fedora) and is a default provider on those platforms. It may
+work on other platforms but is untested.
+
+```ruby
+python_runtime 'myapp' do
+  provider :system
+  version '2.7'
+end
+```
+
+#### Options
+
+* `dev_package` – Install the package with the headers and other development
+  files. Can be set to a string to select the dev package specifically.
+  *(default: true)*
+* `package_name` – Override auto-detection of the package name.
+* `package_upgrade` – Install using action `:upgrade`. *(default: false)*
+* `package_version` – Override auto-detection of the package version.
 
 ### `scl`
 
+The `scl` provider installs Python using the [Software Collections](https://www.softwarecollections.org/)
+packages. This is only available on RHEL, CentOS, and Fedora. SCL offers more
+recent versions of Python than the system packages for the most part.
+
+```ruby
+python_runtime 'myapp' do
+  provider :scl
+  version '3.4'
+end
+```
+
 ### `portable_pypy`
+
+The `portable_pypy` provider installs Python using the [Portable PyPy](https://github.com/squeaky-pl/portable-pypy)
+packages. These are only available for Linux, but should work on any Linux OS.
+Support is included for both `pypy` and `pypy3`.
+
+```ruby
+python_runtime 'myapp' do
+  provider :portable_pypy
+  version 'pypy'
+end
+```
+
+#### Options
+
+* `folder` – Folder to install PyPy in. *(default: /opt/<package name>)*
+* `url` – URL to download the package from. *(default: automatic)*
 
 ## Sponsors
 
