@@ -48,6 +48,8 @@ module PoisePython
         folder = pypy_folder
         url = pypy_package_url
 
+        package %w{tar bzip2}
+
         unpack = execute 'unpack pypy' do
           action :nothing
           command ['tar', 'xjvf', path]
