@@ -8,11 +8,259 @@
 [![License](https://img.shields.io/badge/license-Apache_2-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0)
 
 A [Chef](https://www.chef.io/) cookbook to provide a unified interface for
-installing Python and Python packages, and managing virtualenvs. This README
-covers the 2.x version of the cookbook, the 1.x version is very different and no
-longer supported.
+installing Python, managing Python packages, and creating virtualenvs.
 
-## More Info Coming Soon!
+## Quick Start
+
+To install the latest available version of Python 2 and then use it to create
+a virtualenv and install some packages:
+
+```ruby
+python_runtime '2'
+
+python_virtualenv '/opt/myapp/.env'
+
+python_package 'Django' do
+  version '1.8'
+end
+
+python_requirements '/opt/myapp/requirements.txt'
+```
+
+## Supported Python Versions
+
+This cookbook can install Python 2.7, Python 3, and PyPy on all supported
+platforms (Debian, Ubuntu, RHEL, CentOS, Fedora).
+
+## Resources
+
+### `python_runtime`
+
+The `python_runtime` resource installs a Python interpreter.
+
+```ruby
+python_runtime '2'
+```
+
+#### Actions
+
+* `:install` – Install the Python interpreter. *(default)*
+* `:uninstall` – Uninstall the Python interpreter.
+
+#### Properties
+
+* `version` – Version of Python to install. If a partial version is given, use the
+  latest available version matching that prefix. *(name property)*
+* `pip_version` – Version of pip to install. If set to `true`, use the latest.
+  If set to `false`, do not install pip. Can also be set to a URL to a copy of
+  the `get-pip.py` script. *(default: true)*
+* `setuptools_version` – Version of Setuptools to install. If set to `true`, use
+  the latest. If set to `false`, do not install Setuptools. *(default: true)*
+* `virtualenv_version` – Version of virtualenv to install. If set to `true`,
+  use the latest. If set to `false`, do not install virtualenv. Will never be
+  installed if the `venv` module is already available, such as on Python 3.
+  *(default: true)*
+* `wheel_version` – Version of wheel to install. If set to `true`, use the
+  latest. If set to `false`, do not install wheel.
+
+#### Provider Options
+
+The `poise-python` library offers an additional way to pass configuration
+information to the final provider called "options". Options are key/value pairs
+that are passed down to the ruby_runtime provider and can be used to control how it
+installs Ruby. These can be set in the `python_runtime`
+resource using the `options` method, in node attributes or via the
+`python_runtime_options` resource. The options from all sources are merged
+together in to a single hash.
+
+When setting options in the resource you can either set them for all providers:
+
+```ruby
+python_runtime 'myapp' do
+  version '2.7'
+  options pip_version: false
+end
+```
+
+or for a single provider:
+
+```ruby
+python_runtime 'myapp' do
+  version '2.7'
+  options :system, dev_package: false
+end
+```
+
+Setting via node attributes is generally how an end-user or application cookbook
+will set options to customize installations in the library cookbooks they are using.
+You can set options for all installations or for a single runtime:
+
+```ruby
+# Global, for all installations.
+override['poise-python']['options']['pip_version'] = false
+# Single installation.
+override['poise-python']['myapp']['version'] = 'pypy'
+```
+
+The `python_runtime_options` resource is also available to set node attributes
+for a specific installation in a DSL-friendly way:
+
+```ruby
+python_runtime_options 'myapp' do
+  version '3'
+end
+```
+
+Unlike resource attributes, provider options can be different for each provider.
+Not all providers support the same options so make sure to the check the
+documentation for each provider to see what options the use.
+
+### `python_runtime_options`
+
+The `python_runtime_options` resource allows setting provider options in a
+DSL-friendly way. See [the Provider Options](#provider-options) section for more
+information about provider options overall.
+
+```ruby
+python_runtime_options 'myapp' do
+  version '3'
+end
+```
+
+#### Actions
+
+* `:run` – Apply the provider options. *(default)*
+
+#### Properties
+
+* `resource` – Name of the `python_runtime` resource. *(name property)*
+* `for_provider` – Provider to set options for.
+
+All other attribute keys will be used as options data.
+
+### `python_execute`
+
+The `python_execute` resource executes a Python script using the configured runtime.
+
+```ruby
+python_execute 'myapp.py' do
+  user 'myuser'
+end
+```
+
+This uses the built-in `execute` resource and supports all the same properties.
+
+#### Actions
+
+* `:run` – Execute the script. *(default)*
+
+#### Properties
+
+* `command` – Script and arguments to run. Must not include the `python`. *(name attribute)*
+* `python` – Name of the `python_runtime` resource to use. If not specified, the
+  most recently declared `python_runtime` will be used. Can also be set to the
+  full path to a `python` binary.
+* `virtualenv` – Name of the `python_virtualenv` resource to use. This is
+  mutually exclusive with the `python` property.
+
+For other properties see the [Chef documentation](https://docs.chef.io/resource_execute.html#attributes).
+
+### `python_package`
+
+The `python_package` resource installs Python packages using
+[pip](https://pip.pypa.io/).
+
+```ruby
+python_package 'Django' do
+  version '1.8'
+end
+```
+
+This uses the built-in `package` resource and supports the same actions and
+properties. Multi-package installs are supported using the standard syntax.
+
+#### Actions
+
+* `:install` – Install the package. *(default)*
+* `:upgrade` – Install using the `--upgrade` flag.
+* `:remove` – Uninstall the package.
+
+The `:purge` and `:reconfigure` actions are not supported.
+
+#### Properties
+
+* `package_name` – Package or packages to install. *(name property)*
+* `version` – Version or versions to install.
+* `python` – Name of the `python_runtime` resource to use. If not specified, the
+  most recently declared `python_runtime` will be used. Can also be set to the
+  full path to a `python` binary.
+* `virtualenv` – Name of the `python_virtualenv` resource to use. This is
+  mutually exclusive with the `python` property.
+
+For other properties see the [Chef documentation](https://docs.chef.io/resource_package.html#attributes).
+The `response_file`, `response_file_variables`, and `source` properties are not
+supported.
+
+### `python_virtualenv`
+
+The `python_virtualenv` resource creates Python virtual environments.
+
+```ruby
+python_virtualenv '/opt/myapp'
+```
+
+This will use the `venv` module if available, or `virtualenv` otherwise.
+
+#### Actions
+
+* `:create` – Create the virtual environment. *(default)*
+* `:delete` – Delete the virtual environment.
+
+#### Properties
+
+* `path` – Path to create the environment at. *(name property)*
+* `pip_version` – Version of pip to install. If set to `true`, use the latest.
+  If set to `false`, do not install pip. Can also be set to a URL to a copy of
+  the `get-pip.py` script. *(default: true)*
+* `python` – Name of the `python_runtime` resource to use. If not specified, the
+  most recently declared `python_runtime` will be used. Can also be set to the
+  full path to a `python` binary.
+* `setuptools_version` – Version of Setuptools to install. If set to `true`, use
+  the latest. If set to `false`, do not install Setuptools. *(default: true)*
+* `system_site_packages` – Enable or disable visibilty of system packages in
+  the environment. *(default: false)*
+* `wheel_version` – Version of wheel to install. If set to `true`, use the
+  latest. If set to `false`, do not install wheel.
+
+### `python_requirements`
+
+The `python_requirements` resource installs packages based on a
+`requirements.txt` file.
+
+```ruby
+python_requirements '/opt/myapp/requirements.txt'
+```
+
+The underlying `pip install` command will run on every converge, but
+notifications will only be triggered if a package is actually installed.
+
+#### Actions
+
+* `:install` – Install the requirements. *(default)*
+* `:upgrade` – Install using the `--upgrade` flag.
+
+#### Properties
+
+* `path` – Path to the requirements file, or a folder containing the
+  requirements file. *(name property)*
+
+## Python Providers
+
+### `system`
+
+### `scl`
+
+### `portable_pypy`
 
 ## Sponsors
 
