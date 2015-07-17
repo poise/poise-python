@@ -32,6 +32,22 @@ python_requirements '/opt/myapp/requirements.txt'
 This cookbook can install at least Python 2.7, Python 3, and PyPy on all
 supported platforms (Debian, Ubuntu, RHEL, CentOS, Fedora).
 
+## Attributes
+
+Attributes are used to configure the default recipe.
+
+* `node['poise-python']['install_python2']` – Install a Python 2.x runtime. *(default: true)*
+* `node['poise-python']['install_python3']` – Install a Python 3.x runtime. *(default: false)*
+* `node['poise-python']['install_pypy']` – Install a PyPy runtime. *(default: false)*
+
+## Recipes
+
+### `default`
+
+The default recipe installs Python 2, 3, and/or PyPy based on the node
+attributes. It is entirely optional and can be ignored in favor of direct use
+of the `python_runtime` resource.
+
 ## Resources
 
 ### `python_runtime`
