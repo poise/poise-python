@@ -64,7 +64,17 @@ module PoisePython
             begin
               parent_arg = run_context.resource_collection.find("python_runtime[#{arg}]")
             rescue Chef::Exceptions::ResourceNotFound
-              python_arg = arg
+              # Check if something looks like a path, defined as containing
+              # either / or \. While a single word could be a path, I think the
+              # UX win of better error messages should take priority.
+              might_be_path = arg =~ %r{/|\\}
+              if might_be_path
+                Chef::Log.debug("[#{self}] python_runtime[#{arg}] not found, treating it as a path")
+                python_arg = arg
+              else
+                # Surface the error up to the user.
+                raise
+              end
             end
           else
             parent_arg = arg
