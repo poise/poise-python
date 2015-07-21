@@ -52,9 +52,9 @@ module PoisePython
         #   set to a URL, that will be used as the URL to get-pip.py. If a
         #   non-URL version is given, the get-pip.py installer will be
         #   downloaded from the internet.
-        #   @note Actually setting a specfic version other than a URL is not
-        #     currently supported due to https://github.com/pypa/pip/issues/1087.
-        #     The name of the attribute is more aspirational than accurate.
+        #   @note Due to https://github.com/pypa/pip/issues/1087, the latest
+        #     version of pip will always be installed initially. It will then
+        #     downgrade to the requested version if needed.
         #   @note Disabling the pip install may result in other resources being
         #     non-functional.
         #   @return [String, Boolean]
@@ -67,6 +67,7 @@ module PoisePython
         #   Version of Setuptools to install. It set to `true`, the latest
         #   available version will be used. If set to `false`, setuptools will
         #   not be installed.
+        #   @return [String, Boolean]
         attribute(:setuptools_version, kind_of: [String, TrueClass, FalseClass], default: true)
         # @!attribute virtualenv_version
         #   Version of Virtualenv to install. It set to `true`, the latest
@@ -75,11 +76,13 @@ module PoisePython
         #   venv module is available.
         #   @note Disabling the virtualenv install may result in other resources
         #     being non-functional.
+        #   @return [String, Boolean]
         attribute(:virtualenv_version, kind_of: [String, TrueClass, FalseClass], default: true)
         # @!attribute wheel_version
         #   Version of Wheel to install. It set to `true`, the latest
         #   available version will be used. If set to `false`, wheel will not
         #   be installed.
+        #   @return [String, Boolean]
         attribute(:wheel_version, kind_of: [String, TrueClass, FalseClass], default: true)
 
         # The path to the `python` binary for this Python installation. This is
