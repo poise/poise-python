@@ -23,19 +23,19 @@ require 'poise_python/python_command_mixin'
 
 module PoisePython
   module Resources
-    # (see PythonRequirements::Resource)
+    # (see PipRequirements::Resource)
     # @since 1.0.0
-    module PythonRequirements
-      # A `python_requirements` resource to manage Python virtual environments.
+    module PipRequirements
+      # A `pip_requirements` resource to manage Python virtual environments.
       #
-      # @provides python_requirements
+      # @provides pip_requirements
       # @action create
       # @action delete
       # @example
-      #   python_requirements '/opt/myapp/requirements.txt'
+      #   pip_requirements '/opt/myapp/requirements.txt'
       class Resource < Chef::Resource
         include PoisePython::PythonCommandMixin
-        provides(:python_requirements)
+        provides(:pip_requirements)
         actions(:install, :upgrade)
 
         # @!attribute path
@@ -45,23 +45,23 @@ module PoisePython
         attribute(:path, kind_of: String, name_attribute: true)
       end
 
-      # The default provider for `python_requirements`.
+      # The default provider for `pip_requirements`.
       #
       # @see Resource
-      # @provides python_requirements
+      # @provides pip_requirements
       class Provider < Chef::Provider
         include Poise
         include PoisePython::PythonCommandMixin
-        provides(:python_requirements)
+        provides(:pip_requirements)
 
-        # The `install` action for the `python_requirements` resource.
+        # The `install` action for the `pip_requirements` resource.
         #
         # @return [void]
         def action_install
           install_requirements(upgrade: false)
         end
 
-        # The `upgrade` action for the `python_requirements` resource.
+        # The `upgrade` action for the `pip_requirements` resource.
         #
         # @return [void]
         def action_ugrade

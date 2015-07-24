@@ -71,7 +71,7 @@ RSpec.shared_examples 'a python_runtime_test' do |python_name, version=nil|
     assert_file('import_pytest_venv')
   end
 
-  describe 'python_requirements' do
+  describe 'pip_requirements' do
     assert_file('import_requests') do
       its(:content) { is_expected.to eq '2.7.0' }
     end

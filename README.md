@@ -24,7 +24,7 @@ python_package 'Django' do
   version '1.8'
 end
 
-python_requirements '/opt/myapp/requirements.txt'
+pip_requirements '/opt/myapp/requirements.txt'
 ```
 
 ## Supported Python Versions
@@ -248,13 +248,13 @@ This will use the `venv` module if available, or `virtualenv` otherwise.
 * `wheel_version` – Version of wheel to install. If set to `true`, use the
   latest. If set to `false`, do not install wheel.
 
-### `python_requirements`
+### `pip_requirements`
 
-The `python_requirements` resource installs packages based on a
+The `pip_requirements` resource installs packages based on a
 `requirements.txt` file.
 
 ```ruby
-python_requirements '/opt/myapp/requirements.txt'
+pip_requirements '/opt/myapp/requirements.txt'
 ```
 
 The underlying `pip install` command will run on every converge, but

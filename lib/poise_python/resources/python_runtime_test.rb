@@ -123,7 +123,7 @@ requests==2.7.0
 six==1.8.0
 EOH
             end
-            python_requirements ::File.join(new_resource.path, 'requirements.txt') do
+            pip_requirements ::File.join(new_resource.path, 'requirements.txt') do
               python new_resource.name
             end
             test_import('requests')
