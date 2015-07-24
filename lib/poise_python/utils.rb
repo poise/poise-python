@@ -14,6 +14,8 @@
 # limitations under the License.
 #
 
+require 'poise_python/error'
+
 
 module PoisePython
   # Helper methods for Python-related things.
@@ -29,6 +31,33 @@ module PoisePython
     # @return [String]
     def to_python(obj)
       PythonEncoder.new(obj).encode
+    end
+
+    # Convert path to a Python dotted module name.
+    #
+    # @param path [String] Path to the file. If base is not given, this must be
+    #   a relative path.
+    # @param base [String] Optional base path to treat the file as relative to.
+    # @return [String]
+    def path_to_module(path, base=nil)
+      if base
+        path = ::File.expand_path(path, base)
+        raise PoisePython::Error.new("Path #{path} is not inside base path #{base}") unless path.start_with?(base)
+        path = path[base.length+1..-1]
+      end
+      path = path[0..-4] if path.end_with?('.py')
+      path.gsub(/#{::File::SEPARATOR}/, '.')
+    end
+
+    # Convert a Python dotted module name to a path.
+    #
+    # @param mod [String] Dotted module name.
+    # @param base [String] Optional base path to treat the file as relative to.
+    # @return [String]
+    def module_to_path(mod, base=nil)
+      path = mod.gsub(/\./, ::File::SEPARATOR) + '.py'
+      path = ::File.join(base, path) if base
+      path
     end
   end
 end
