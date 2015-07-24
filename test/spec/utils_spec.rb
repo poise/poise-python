@@ -14,12 +14,11 @@
 # limitations under the License.
 #
 
+require 'spec_helper'
 
-module PoisePython
-  autoload :Error, 'poise_python/error'
-  autoload :Resources, 'poise_python/resources'
-  autoload :PythonCommandMixin, 'poise_python/python_command_mixin'
-  autoload :PythonProviders, 'poise_python/python_providers'
-  autoload :Utils, 'poise_python/utils'
-  autoload :VERSION, 'poise_python/version'
+describe PoisePython::Utils do
+  describe '.to_python' do
+    subject { described_class.to_python(1) }
+    it { is_expected.to eq '1' }
+  end # /describe .to_python
 end

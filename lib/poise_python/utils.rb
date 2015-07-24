@@ -16,10 +16,19 @@
 
 
 module PoisePython
-  autoload :Error, 'poise_python/error'
-  autoload :Resources, 'poise_python/resources'
-  autoload :PythonCommandMixin, 'poise_python/python_command_mixin'
-  autoload :PythonProviders, 'poise_python/python_providers'
-  autoload :Utils, 'poise_python/utils'
-  autoload :VERSION, 'poise_python/version'
+  # Helper methods for Python-related things.
+  #
+  # @since 1.0.0
+  module Utils
+    autoload :PythonEncoder, 'poise_python/utils/python_encoder'
+    extend self
+
+    # Convert an object to a Python literal.
+    #
+    # @param obj [Object] Ovject to convert.
+    # @return [String]
+    def to_python(obj)
+      PythonEncoder.new(obj).encode
+    end
+  end
 end
