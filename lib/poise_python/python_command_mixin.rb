@@ -96,6 +96,18 @@ module PoisePython
         parent_python("python_virtualenv[#{name}]")
       end
 
+      # Set the parent Python for this resource based on another resource.
+      #
+      # @param resource [Chef::Resource] Resource to inherit settings from.
+      # @return [void]
+      def from_parent(resource)
+        if resource.parent_python
+          parent_python(resource.parent_python)
+        elsif resource.python
+          python(resource.python)
+        end
+      end
+
       private
 
       # Compute the default path to the Python binary.
