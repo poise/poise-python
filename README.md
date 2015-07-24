@@ -250,8 +250,8 @@ This will use the `venv` module if available, or `virtualenv` otherwise.
 
 ### `pip_requirements`
 
-The `pip_requirements` resource installs packages based on a
-`requirements.txt` file.
+The `pip_requirements` resource installs packages based on a `requirements.txt`
+file.
 
 ```ruby
 pip_requirements '/opt/myapp/requirements.txt'
