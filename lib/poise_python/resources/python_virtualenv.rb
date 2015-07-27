@@ -93,9 +93,9 @@ module PoisePython
           ::File.join(new_resource.path, 'bin', 'python')
         end
 
-        def python_environment
+        def python_environment(env=ENV)
           if new_resource.parent_python
-            new_resource.parent_python.python_environment
+            new_resource.parent_python.python_environment(env)
           else
             {}
           end

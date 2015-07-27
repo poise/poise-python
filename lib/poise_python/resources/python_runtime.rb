@@ -98,13 +98,15 @@ module PoisePython
         # The environment variables for this Python installation. This is an
         # output property.
         #
+        # @param env [Hash<String, String>] Optional base environment. If not
+        #   specified uses ENV.
         # @return [Hash<String, String>]
         # @example
         #   execute '/opt/myapp.py' do
         #     environment resources('python_runtime[2.7]').python_environment
         #   end
-        def python_environment
-          provider_for_action(:python_environment).python_environment
+        def python_environment(env=ENV)
+          provider_for_action(:python_environment).python_environment(env)
         end
       end
 

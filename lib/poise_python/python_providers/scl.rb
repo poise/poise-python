@@ -57,7 +57,7 @@ module PoisePython
         ::File.join(scl_folder, 'root', 'usr', 'bin', 'python')
       end
 
-      def python_environment
+      def python_environment(env=ENV)
         scl_environment
       end
 
