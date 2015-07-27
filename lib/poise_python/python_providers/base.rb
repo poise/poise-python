@@ -73,9 +73,8 @@ module PoisePython
 
       # The environment variables for this Python. This is an output property.
       #
-      # @param env [Hash<String, String>] Existing environment values.
       # @return [Hash<String, String>]
-      def python_environment(env=ENV)
+      def python_environment
         {}
       end
 
