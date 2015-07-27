@@ -19,7 +19,7 @@ require 'chef/provider/execute'
 require 'chef/resource/execute'
 require 'poise'
 
-require 'poise_python/resources/python_runtime'
+require 'poise_python/python_command_mixin'
 
 
 module PoisePython
@@ -36,25 +36,9 @@ module PoisePython
       #     user 'myuser'
       #   end
       class Resource < Chef::Resource::Execute
-        include Poise(parent: true)
+        include PoisePython::PythonCommandMixin
         provides(:python_execute)
         actions(:run)
-
-        # @!attribute parent_python
-        #   Parent Python installation.
-        #   @return [PoisePython::Resources::Python::Resource, nil]
-        parent_attribute(:python, type: :python_runtime, optional: true)
-
-        # Nicer name for the DSL.
-        alias_method :python, :parent_python
-
-        # Wrapper for setting the parent to be a virtualenv.
-        #
-        # @param name [String] Name of the virtualenv resource.
-        # @return [void]
-        def virtualenv(name)
-          parent_python("python_virtualenv[#{name}]")
-        end
       end
 
       # The default provider for `python_execute`.
@@ -67,25 +51,14 @@ module PoisePython
 
         private
 
-        # The Python binary to use for this command.
-        #
-        # @return [String]
-        def python_binary
-          if new_resource.parent_python
-            new_resource.parent_python.python_binary
-          else
-            which('python')
-          end
-        end
-
         # Command to pass to shell_out.
         #
         # @return [String, Array<String>]
         def command
           if new_resource.command.is_a?(Array)
-            [python_binary] + new_resource.command
+            [new_resource.python] + new_resource.command
           else
-            "#{python_binary} #{new_resource.command}"
+            "#{new_resource.python} #{new_resource.command}"
           end
         end
 
