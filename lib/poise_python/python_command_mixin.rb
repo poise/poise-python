@@ -100,7 +100,7 @@ module PoisePython
       #
       # @param resource [Chef::Resource] Resource to inherit settings from.
       # @return [void]
-      def from_parent(resource)
+      def python_from_parent(resource)
         if resource.parent_python
           parent_python(resource.parent_python)
         elsif resource.python
