@@ -29,8 +29,8 @@ module PoisePython
       # A `pip_requirements` resource to manage Python virtual environments.
       #
       # @provides pip_requirements
-      # @action create
-      # @action delete
+      # @action install
+      # @action upgrade
       # @example
       #   pip_requirements '/opt/myapp/requirements.txt'
       class Resource < Chef::Resource

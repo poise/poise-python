@@ -143,7 +143,7 @@ module PoisePython
           cmd << new_resource.path
           python_shell_out!(cmd, environment: {
             # Use the environment variables to cope with older virtualenv not
-            # supporting --no-wheel. The env var will be ignored.
+            # supporting --no-wheel. The env var will be ignored if unsupported.
             'VIRTUALENV_NO_PIP' => '1',
             'VIRTUALENV_NO_SETUPTOOLS' => '1',
             'VIRTUALENV_NO_WHEEL' => '1',
