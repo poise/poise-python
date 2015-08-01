@@ -25,6 +25,9 @@ module PoisePython
     class Base < Chef::Provider
       include Poise(inversion: :python_runtime)
 
+      # Set default inversion options.
+      #
+      # @api private
       def self.default_inversion_options(node, new_resource)
         super.merge({
           pip_version: new_resource.pip_version,
