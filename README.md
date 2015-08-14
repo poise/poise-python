@@ -32,6 +32,10 @@ pip_requirements '/opt/myapp/requirements.txt'
 This cookbook can install at least Python 2.7, Python 3, and PyPy on all
 supported platforms (Debian, Ubuntu, RHEL, CentOS, Fedora).
 
+## Requirements
+
+Chef 12 or newer is required.
+
 ## Attributes
 
 Attributes are used to configure the default recipe.
