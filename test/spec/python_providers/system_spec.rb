@@ -30,9 +30,10 @@ describe PoisePython::PythonProviders::System do
     end
   end
 
-  shared_examples_for 'system provider' do |candidates|
+  shared_examples_for 'system provider' do |candidates, pkg|
     it { expect(python_runtime.provider_for_action(:install)).to be_a described_class }
     it { expect(system_package_candidates).to eq candidates }
+    it { is_expected.to install_poise_languages_system(pkg) }
     it do
       expect_any_instance_of(described_class).to receive(:install_system_packages)
       run_chef
@@ -41,26 +42,26 @@ describe PoisePython::PythonProviders::System do
 
   context 'with version ""' do
     let(:python_version) { '' }
-    it_behaves_like 'system provider', %w{python3.5 python35 python3.4 python34 python3.3 python33 python3.2 python32 python3.1 python31 python3.0 python30 python3 python2.7 python27 python2.6 python26 python2.5 python25 python}
+    it_behaves_like 'system provider', %w{python3.5 python35 python3.4 python34 python3.3 python33 python3.2 python32 python3.1 python31 python3.0 python30 python3 python2.7 python27 python2.6 python26 python2.5 python25 python}, 'python3.4'
   end # /context with version ""
 
   context 'with version 2' do
     let(:python_version) { '2' }
-    it_behaves_like 'system provider', %w{python2.7 python27 python2.6 python26 python2.5 python25 python}
+    it_behaves_like 'system provider', %w{python2.7 python27 python2.6 python26 python2.5 python25 python}, 'python2.7'
   end # /context with version 2
 
   context 'with version 3' do
     let(:python_version) { '3' }
-    it_behaves_like 'system provider', %w{python3.5 python35 python3.4 python34 python3.3 python33 python3.2 python32 python3.1 python31 python3.0 python30 python3 python}
+    it_behaves_like 'system provider', %w{python3.5 python35 python3.4 python34 python3.3 python33 python3.2 python32 python3.1 python31 python3.0 python30 python3 python}, 'python3.4'
   end # /context with version 3
 
   context 'with version 2.3' do
     let(:python_version) { '2.3' }
     before do
       default_attributes['poise-python'] ||= {}
-      default_attributes['poise-python']['test'] = {'package_name' => 'python'}
+      default_attributes['poise-python']['test'] = {'package_name' => 'python2.3'}
     end
-    it_behaves_like 'system provider', %w{python2.3 python23 python}
+    it_behaves_like 'system provider', %w{python2.3 python23 python}, 'python2.3'
   end # /context with version 2.3
 
   context 'action :uninstall' do
