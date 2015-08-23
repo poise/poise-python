@@ -67,7 +67,7 @@ module PoisePython
 
       def uninstall_python
         directory pypy_folder do
-          action :remove
+          action :delete
           recursive true
         end
       end
