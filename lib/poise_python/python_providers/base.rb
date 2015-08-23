@@ -17,8 +17,6 @@
 require 'chef/provider'
 require 'poise'
 
-require 'poise_python/resources/python_runtime'
-
 
 module PoisePython
   module PythonProviders

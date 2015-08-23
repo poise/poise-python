@@ -32,7 +32,7 @@ module PoisePython
       # @action delete
       # @example
       #   python_virtualenv '/opt/myapp'
-      class Resource < PythonRuntime::Resource
+      class Resource < PoisePython::Resources::PythonRuntime::Resource
         include PoisePython::PythonCommandMixin
         provides(:python_virtualenv)
         # Add create and delete actions as more semantically relevant aliases.
