@@ -121,6 +121,12 @@ module PoisePython
         end
       end
 
+      # Install setuptools in to the Python runtime. This is very similar to the
+      # {#install_wheel} and {#install_virtualenv} methods but they are kept
+      # separate for the benefit of subclasses being able to override them
+      # individually.
+      #
+      # @return [void]
       def install_setuptools
         # Captured because #options conflicts with Chef::Resource::Package#options.
         setuptools_version = options[:setuptools_version]
@@ -133,6 +139,9 @@ module PoisePython
         end
       end
 
+      # Install wheel in to the Python runtime.
+      #
+      # @return [void]
       def install_wheel
         # Captured because #options conflicts with Chef::Resource::Package#options.
         wheel_version = options[:wheel_version]
@@ -145,6 +154,9 @@ module PoisePython
         end
       end
 
+      # Install virtualenv in to the Python runtime.
+      #
+      # @return [void]
       def install_virtualenv
         # Captured because #options conflicts with Chef::Resource::Package#options.
         virtualenv_version = options[:virtualenv_version]
