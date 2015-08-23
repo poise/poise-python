@@ -60,7 +60,7 @@ module PoisePython
           @provider = Provider
         end
 
-        # Upstream attribute we don't support. Sets are ignored and gets always
+        # Upstream attribute we don't support. Sets are an error and gets always
         # return nil.
         #
         # @api private
