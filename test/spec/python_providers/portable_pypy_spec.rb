@@ -29,32 +29,30 @@ describe PoisePython::PythonProviders::PortablePyPy do
     end
   end
 
+  shared_examples_for 'portablepypy provider' do |name|
+    it { expect(python_runtime.provider_for_action(:install)).to be_a described_class }
+    it { is_expected.to create_remote_file(File.join(Chef::Config[:file_cache_path], "#{name}.tar.bz2")).with(source: "https://bitbucket.org/squeaky/portable-pypy/downloads/#{name}.tar.bz2") }
+    it { expect(python_runtime.python_binary).to eq "/opt/#{name}/bin/pypy"}
+  end
+
   context 'with version pypy' do
     let(:python_version) { 'pypy' }
-    it { expect(python_runtime.provider_for_action(:install)).to be_a described_class }
-    it { is_expected.to create_remote_file(File.join(Chef::Config[:file_cache_path], 'pypy-2.6-linux_x86_64-portable.tar.bz2')).with(source: 'https://bitbucket.org/squeaky/portable-pypy/downloads/pypy-2.6-linux_x86_64-portable.tar.bz2') }
-    it { expect(python_runtime.python_binary).to eq '/opt/pypy-2.6-linux_x86_64-portable/bin/pypy'}
+    it_behaves_like 'portablepypy provider', 'pypy-2.6-linux_x86_64-portable'
   end # /context with version pypy
 
   context 'with version pypy-2.4' do
     let(:python_version) { 'pypy-2.4' }
-    it { expect(python_runtime.provider_for_action(:install)).to be_a described_class }
-    it { is_expected.to create_remote_file(File.join(Chef::Config[:file_cache_path], 'pypy-2.4-linux_x86_64-portable.tar.bz2')).with(source: 'https://bitbucket.org/squeaky/portable-pypy/downloads/pypy-2.4-linux_x86_64-portable.tar.bz2') }
-    it { expect(python_runtime.python_binary).to eq '/opt/pypy-2.4-linux_x86_64-portable/bin/pypy'}
+    it_behaves_like 'portablepypy provider', 'pypy-2.4-linux_x86_64-portable'
   end # /context with version pypy-2.4
 
   context 'with version pypy3' do
     let(:python_version) { 'pypy3' }
-    it { expect(python_runtime.provider_for_action(:install)).to be_a described_class }
-    it { is_expected.to create_remote_file(File.join(Chef::Config[:file_cache_path], 'pypy3-2.4-linux_x86_64-portable.tar.bz2')).with(source: 'https://bitbucket.org/squeaky/portable-pypy/downloads/pypy3-2.4-linux_x86_64-portable.tar.bz2') }
-    it { expect(python_runtime.python_binary).to eq '/opt/pypy3-2.4-linux_x86_64-portable/bin/pypy'}
+    it_behaves_like 'portablepypy provider', 'pypy3-2.4-linux_x86_64-portable'
   end # /context with version pypy3
 
   context 'with version pypy3-2.3.1' do
     let(:python_version) { 'pypy3-2.3.1' }
-    it { expect(python_runtime.provider_for_action(:install)).to be_a described_class }
-    it { is_expected.to create_remote_file(File.join(Chef::Config[:file_cache_path], 'pypy3-2.3.1-linux_x86_64-portable.tar.bz2')).with(source: 'https://bitbucket.org/squeaky/portable-pypy/downloads/pypy3-2.3.1-linux_x86_64-portable.tar.bz2') }
-    it { expect(python_runtime.python_binary).to eq '/opt/pypy3-2.3.1-linux_x86_64-portable/bin/pypy'}
+    it_behaves_like 'portablepypy provider', 'pypy3-2.3.1-linux_x86_64-portable'
   end # /context with version pypy3-2.3.1
 
   context 'action :uninstall' do
