@@ -62,7 +62,7 @@ module PoisePython
 
         # @api private
         def load_current_resource
-          @current_resource = new_resource.class.new(new_resource.name, run_context)
+          super
           # Try to find the current version if possible.
           current_resource.version(pip_version)
         end
