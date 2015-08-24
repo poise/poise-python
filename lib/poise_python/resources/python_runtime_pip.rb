@@ -62,9 +62,10 @@ module PoisePython
 
         # @api private
         def load_current_resource
-          super
-          # Try to find the current version if possible.
-          current_resource.version(pip_version)
+          super.tap do |current_resource|
+            # Try to find the current version if possible.
+            current_resource.version(pip_version)
+          end
         end
 
         # The `install` action for the `python_runtime_pip` resource.
