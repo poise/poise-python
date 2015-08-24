@@ -43,10 +43,18 @@ module PoisePython
         #   Path to create the environment at.
         #   @return [String]
         attribute(:path, kind_of: String, name_attribute: true)
+        # @!attribute group
+        #   System group to create the virtualenv.
+        #   @return [String, Integer, nil]
+        attribute(:group, kind_of: [String, Integer, NilClass])
         # @!attribute system_site_packages
         #   Enable or disable visibilty of system packages in the environment.
         #   @return [Boolean]
         attribute(:system_site_packages, equal_to: [true, false], default: false)
+        # @!attribute user
+        #   System user to create the virtualenv.
+        #   @return [String, Integer, nil]
+        attribute(:user, kind_of: [String, Integer, NilClass])
 
         # Lock the default provider.
         #
@@ -147,7 +155,7 @@ module PoisePython
             'VIRTUALENV_NO_PIP' => '1',
             'VIRTUALENV_NO_SETUPTOOLS' => '1',
             'VIRTUALENV_NO_WHEEL' => '1',
-          })
+          }, group: new_resource.group, user: new_resource.user)
         end
 
       end

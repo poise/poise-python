@@ -85,6 +85,16 @@ EOH
         include PoisePython::PythonCommandMixin
         provides(:python_package)
 
+
+        # @!attribute group
+        #   System group to install the package.
+        #   @return [String, Integer, nil]
+        attribute(:group, kind_of: [String, Integer, NilClass])
+        # @!attribute user
+        #   System user to install the package.
+        #   @return [String, Integer, nil]
+        attribute(:user, kind_of: [String, Integer, NilClass])
+
         def initialize(*args)
           super
           # For older Chef.
@@ -239,6 +249,9 @@ EOH
             # No special options, use an array to skip the extra /bin/sh.
             runner + [pip_command] + pip_options
           end
+          # Set user and group.
+          opts[:user] = new_resource.user if new_resource.user
+          opts[:group] = new_resource.group if new_resource.group
 
           python_shell_out!(full_cmd, opts)
         end

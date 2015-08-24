@@ -209,11 +209,13 @@ The `:purge` and `:reconfigure` actions are not supported.
 
 #### Properties
 
+* `group` – System group to install the package.
 * `package_name` – Package or packages to install. *(name property)*
 * `version` – Version or versions to install.
 * `python` – Name of the `python_runtime` resource to use. If not specified, the
   most recently declared `python_runtime` will be used. Can also be set to the
   full path to a `python` binary.
+* `user` – System user to install the package.
 * `virtualenv` – Name of the `python_virtualenv` resource to use. This is
   mutually exclusive with the `python` property.
 
@@ -238,6 +240,7 @@ This will use the `venv` module if available, or `virtualenv` otherwise.
 
 #### Properties
 
+* `group` – System group to create the virtualenv.
 * `path` – Path to create the environment at. *(name property)*
 * `pip_version` – Version of pip to install. If set to `true`, use the latest.
   If set to `false`, do not install pip. Can also be set to a URL to a copy of
@@ -249,6 +252,7 @@ This will use the `venv` module if available, or `virtualenv` otherwise.
   the latest. If set to `false`, do not install Setuptools. *(default: true)*
 * `system_site_packages` – Enable or disable visibilty of system packages in
   the environment. *(default: false)*
+* `user` – System user to create the virtualenv.
 * `wheel_version` – Version of wheel to install. If set to `true`, use the
   latest. If set to `false`, do not install wheel.
 
