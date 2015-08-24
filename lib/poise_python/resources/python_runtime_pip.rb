@@ -41,7 +41,14 @@ module PoisePython
         provides(:python_runtime_pip)
         actions(:install, :uninstall)
 
+        # @!attribute version
+        #   Version of pip to install. Only kind of works due to
+        #   https://github.com/pypa/pip/issues/1087.
+        #   @return [String]
         attribute(:version, kind_of: String)
+        # @!attribute get_pip_url
+        #   URL to the get-pip.py script. Defaults to pulling it from pypa.io.
+        #   @return [String]
         attribute(:get_pip_url, kind_of: String, default: DEFAULT_GET_PIP_URL)
       end
 
