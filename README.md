@@ -357,6 +357,23 @@ end
 
 *Coming soon!*
 
+## Upgrading from the `python` Cookbook
+
+The older `python` cookbook is not directly compatible with this one, but the
+broad strokes overlap well. The `python::default` recipe is roughly equivalent
+to the `poise-python::default` recipe. The `python::pip` and `python::virtualenv`
+recipes are no longer needed as installing those things is now part of the
+`python_runtime` resource. The `python::package` recipe corresponds with the
+`system` provider for the `python_runtime` resource, and can generally be
+replaced with `poise-python::default`. At this time there is no provider to
+install from source so there is no replacement for the `python::source` recipe,
+however this is planned for the future via a `python-build` provider.
+
+The `python_pip` resource can be replaced with `python_package`, though the
+`environment` property has been removed. The `python_virtualenv` resource can remain
+unchanged except for the `interpreter` property now being `python` and the
+`options` property has been removed.
+
 ## Sponsors
 
 Development sponsored by [Bloomberg](http://www.bloomberg.com/company/technology/).
