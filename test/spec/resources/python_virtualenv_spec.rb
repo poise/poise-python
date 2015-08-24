@@ -20,10 +20,11 @@ describe PoisePython::Resources::PythonVirtualenv do
   step_into(:python_virtualenv)
   let(:expect_cmd) { nil }
   let(:has_venv) { false }
+  let(:expect_user) { nil }
   before do
     if expect_cmd
       expect_any_instance_of(PoisePython::Resources::PythonVirtualenv::Provider).to receive(:python_shell_out).with(%w{-m venv -h}).and_return(double(error?: !has_venv))
-      expect_any_instance_of(PoisePython::Resources::PythonVirtualenv::Provider).to receive(:python_shell_out!).with(expect_cmd, environment: be_a(Hash))
+      expect_any_instance_of(PoisePython::Resources::PythonVirtualenv::Provider).to receive(:python_shell_out!).with(expect_cmd, environment: be_a(Hash), user: expect_user, group: expect_user)
     end
   end
 
@@ -58,6 +59,20 @@ describe PoisePython::Resources::PythonVirtualenv do
 
     it { is_expected.to create_python_virtualenv('/test') }
   end # /context with system_site_packages
+
+  context 'with a user and group' do
+    let(:expect_cmd) { %w{-m virtualenv /test} }
+    let(:expect_user) { 'me' }
+    recipe do
+      python_virtualenv '/test' do
+        user 'me'
+        group 'me'
+      end
+    end
+
+    it { is_expected.to create_python_virtualenv('/test') }
+  end # /context with a user and group
+
 
   context 'with action :delete' do
     recipe do
