@@ -64,7 +64,7 @@ module PoisePython
         # The `upgrade` action for the `pip_requirements` resource.
         #
         # @return [void]
-        def action_ugrade
+        def action_upgrade
           install_requirements(upgrade: true)
         end
 
