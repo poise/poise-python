@@ -17,7 +17,7 @@
 require 'spec_helper'
 
 describe PoisePython::PythonProviders::System do
-  let(:python_version) { nil }
+  let(:python_version) { '' }
   let(:chefspec_options) { {platform: 'ubuntu', version: '14.04'} }
   let(:default_attributes) { {poise_python_version: python_version} }
   let(:python_runtime) { chef_run.python_runtime('test') }
@@ -76,5 +76,6 @@ describe PoisePython::PythonProviders::System do
       expect_any_instance_of(described_class).to receive(:uninstall_system_packages)
       run_chef
     end
+    it { expect(python_runtime.provider_for_action(:uninstall)).to be_a described_class }
   end # /context action :uninstall
 end
