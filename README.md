@@ -102,7 +102,7 @@ python_runtime 'myapp' do
 end
 ```
 
-or for a single provider:
+or for a single provider (in this case the `system` provider):
 
 ```ruby
 python_runtime 'myapp' do
@@ -111,8 +111,8 @@ python_runtime 'myapp' do
 end
 ```
 
-Setting via node attributes is generally how an end-user or application cookbook
-will set options to customize installations in the library cookbooks they are using.
+Setting options via node attributes is generally how an end-user or application
+cookbook will customize installations in the library cookbooks they are using.
 You can set options for all installations or for a single runtime:
 
 ```ruby
