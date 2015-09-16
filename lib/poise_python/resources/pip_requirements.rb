@@ -26,7 +26,8 @@ module PoisePython
     # (see PipRequirements::Resource)
     # @since 1.0.0
     module PipRequirements
-      # A `pip_requirements` resource to manage Python virtual environments.
+      # A `pip_requirements` resource to install packages from a requirements.txt
+      # file using pip.
       #
       # @provides pip_requirements
       # @action install
