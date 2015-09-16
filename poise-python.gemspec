@@ -25,7 +25,7 @@ Gem::Specification.new do |spec|
   spec.email = %w{noah@coderanger.net}
   spec.description = "A Chef cookbook for managing Python installations."
   spec.summary = spec.description
-  spec.homepage = 'https://github.com/poise/python'
+  spec.homepage = 'https://github.com/poise/poise-python'
   spec.license = 'Apache 2.0'
 
   spec.files = `git ls-files`.split($/)
