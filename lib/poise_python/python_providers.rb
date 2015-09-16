@@ -14,6 +14,7 @@
 # limitations under the License.
 #
 
+require 'poise_python/python_providers/dummy'
 require 'poise_python/python_providers/portable_pypy'
 require 'poise_python/python_providers/scl'
 require 'poise_python/python_providers/system'
