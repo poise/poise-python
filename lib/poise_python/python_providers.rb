@@ -14,6 +14,8 @@
 # limitations under the License.
 #
 
+require 'chef/platform/provider_priority_map'
+
 require 'poise_python/python_providers/dummy'
 require 'poise_python/python_providers/portable_pypy'
 require 'poise_python/python_providers/scl'
