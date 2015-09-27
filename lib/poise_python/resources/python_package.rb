@@ -84,6 +84,10 @@ EOH
       class Resource < Chef::Resource::Package
         include PoisePython::PythonCommandMixin
         provides(:python_package)
+        # Manually create matchers because #actions is unreliable.
+        %i{install upgrade remove}.each do |action|
+          Poise::Helpers::ChefspecMatchers.create_matcher(:python_package, action)
+        end
 
 
         # @!attribute group
