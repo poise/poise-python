@@ -22,13 +22,13 @@ require 'poise_python/python_providers/base'
 
 module PoisePython
   module PythonProviders
-    class PortablePyPy < Base
-      provides(:portable_pypy)
+    class PortablePyPy3 < Base
+      provides(:portable_pypy3)
       include PoiseLanguages::Static(
-        name: 'pypy',
-        versions: %w{2.6 2.5.1 2.5 2.4 2.3.1 2.3 2.2.1 2.2 2.1 2.0.2},
+        name: 'pypy3',
+        versions: %w{2.4 2.3.1},
         machines: %w{linux-i686 linux-x86_64},
-        url: 'https://bitbucket.org/squeaky/portable-pypy/downloads/pypy-%{version}-%{kernel}_%{machine}-portable.tar.bz2'
+        url: 'https://bitbucket.org/squeaky/portable-pypy/downloads/pypy3-%{version}-%{kernel}_%{machine}-portable.tar.bz2'
       )
 
       def python_binary
@@ -48,5 +48,4 @@ module PoisePython
     end
   end
 end
-
 

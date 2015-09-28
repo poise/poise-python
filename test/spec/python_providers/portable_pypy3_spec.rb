@@ -16,7 +16,7 @@
 
 require 'spec_helper'
 
-describe PoisePython::PythonProviders::PortablePyPy do
+describe PoisePython::PythonProviders::PortablePyPy3 do
   let(:python_version) { nil }
   let(:chefspec_options) { {platform: 'ubuntu', version: '14.04'} }
   let(:default_attributes) { {poise_python_version: python_version} }
@@ -29,30 +29,30 @@ describe PoisePython::PythonProviders::PortablePyPy do
     end
   end
 
-  shared_examples_for 'portablepypy provider' do |base|
+  shared_examples_for 'portablepypy3 provider' do |base|
     it { expect(python_runtime.provider_for_action(:install)).to be_a described_class }
     it { is_expected.to install_poise_languages_static(File.join('', 'opt', base)).with(source: "https://bitbucket.org/squeaky/portable-pypy/downloads/#{base}-linux_x86_64-portable.tar.bz2") }
     it { expect(python_runtime.python_binary).to eq File.join('', 'opt', base, 'bin', 'pypy') }
   end
 
-  context 'with version pypy' do
-    let(:python_version) { 'pypy' }
-    it_behaves_like 'portablepypy provider', 'pypy-2.6'
-  end # /context with version pypy
+  context 'with version pypy3' do
+    let(:python_version) { 'pypy3' }
+    it_behaves_like 'portablepypy3 provider', 'pypy3-2.4'
+  end # /context with version pypy3
 
-  context 'with version pypy-2.4' do
-    let(:python_version) { 'pypy-2.4' }
-    it_behaves_like 'portablepypy provider', 'pypy-2.4'
-  end # /context with version pypy-2.4
+  context 'with version pypy3-2.3.1' do
+    let(:python_version) { 'pypy3-2.3.1' }
+    it_behaves_like 'portablepypy3 provider', 'pypy3-2.3.1'
+  end # /context with version pypy3-2.3.1
 
   context 'action :uninstall' do
     recipe do
       python_runtime 'test' do
-        version 'pypy'
+        version 'pypy3'
         action :uninstall
       end
     end
 
-    it { is_expected.to uninstall_poise_languages_static('/opt/pypy-2.6') }
+    it { is_expected.to uninstall_poise_languages_static('/opt/pypy3-2.4') }
   end # /context action :uninstall
 end
