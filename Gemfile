@@ -30,4 +30,4 @@ end
 dev_gem 'halite'
 dev_gem 'poise'
 dev_gem 'poise-boiler'
-dev_gem 'poise-languages'
+dev_gem 'poise-languages', github: 'poise/poise-languages'

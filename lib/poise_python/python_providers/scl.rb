@@ -26,13 +26,13 @@ module PoisePython
     class Scl < Base
       include PoiseLanguages::Scl::Mixin
       provides(:scl)
-      scl_package('3.4.2', 'rh-python34', {
+      scl_package('3.4.2', 'rh-python34', 'rh-python34-python-devel', {
         ['redhat', 'centos'] => {
           '~> 7.0' => 'https://www.softwarecollections.org/en/scls/rhscl/rh-python34/epel-7-x86_64/download/rhscl-rh-python34-epel-7-x86_64.noarch.rpm',
           '~> 6.0' => 'https://www.softwarecollections.org/en/scls/rhscl/rh-python34/epel-6-x86_64/download/rhscl-rh-python34-epel-6-x86_64.noarch.rpm',
         },
       })
-      scl_package('3.3.2', 'python33', {
+      scl_package('3.3.2', 'python33', 'python33-python-devel', {
         ['redhat', 'centos'] => {
           '~> 7.0' => 'https://www.softwarecollections.org/en/scls/rhscl/python33/epel-7-x86_64/download/rhscl-python33-epel-7-x86_64.noarch.rpm',
           '~> 6.0' => 'https://www.softwarecollections.org/en/scls/rhscl/python33/epel-6-x86_64/download/rhscl-python33-epel-6-x86_64.noarch.rpm',
@@ -42,7 +42,7 @@ module PoisePython
           '~> 20.0' => 'https://www.softwarecollections.org/en/scls/rhscl/python33/fedora-20-x86_64/download/rhscl-python33-fedora-20-x86_64.noarch.rpm',
         },
       })
-      scl_package('2.7.8', 'python27', {
+      scl_package('2.7.8', 'python27', 'python27-python-devel', {
         ['redhat', 'centos'] => {
           '~> 7.0' => 'https://www.softwarecollections.org/en/scls/rhscl/python27/epel-7-x86_64/download/rhscl-python27-epel-7-x86_64.noarch.rpm',
           '~> 6.0' => 'https://www.softwarecollections.org/en/scls/rhscl/python27/epel-6-x86_64/download/rhscl-python27-epel-6-x86_64.noarch.rpm',
