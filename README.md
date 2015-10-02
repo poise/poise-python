@@ -337,12 +337,23 @@ end
 
 The `portable_pypy` provider installs Python using the [Portable PyPy](https://github.com/squeaky-pl/portable-pypy)
 packages. These are only available for Linux, but should work on any Linux OS.
-Support is included for both `pypy` and `pypy3`.
 
 ```ruby
 python_runtime 'myapp' do
   provider :portable_pypy
   version 'pypy'
+end
+```
+
+### `portable_pypy3`
+
+The `portable_pypy3` provider installs Python 3 using the [Portable PyPy](https://github.com/squeaky-pl/portable-pypy)
+packages. These are only available for Linux, but should work on any Linux OS.
+
+```ruby
+python_runtime 'myapp' do
+  provider :portable_pypy3
+  version 'pypy3'
 end
 ```
 
