@@ -49,15 +49,15 @@ def replacement(*args, **kwargs):
     dists = []
     for raw_req in sys.argv[3:]:
         if raw_req.startswith('-'):
-          continue
+            continue
         req = pkg_resources.Requirement.parse(raw_req)
         dist = pkg_resources.working_set.by_key.get(req.key)
         if dist:
-          # Don't mutate stuff from the global working set.
-          dist = copy.copy(dist)
+            # Don't mutate stuff from the global working set.
+            dist = copy.copy(dist)
         else:
-          # Make a fake one.
-          dist = pkg_resources.Distribution(project_name=req.key, version='0')
+            # Make a fake one.
+            dist = pkg_resources.Distribution(project_name=req.key, version='0')
         # Fool the .key property into using our string.
         dist._key = raw_req
         dists.append(dist)
