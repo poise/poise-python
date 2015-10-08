@@ -248,7 +248,7 @@ EOH
           full_cmd = if new_resource.options
             # We have to use a string for this case to be safe because the
             # options are a string and I don't want to try and parse that.
-            "##{runner.join(' ')} #{pip_command} #{new_resource.options} #{Shellwords.join(pip_options)}"
+            "#{runner.join(' ')} #{pip_command} #{new_resource.options} #{Shellwords.join(pip_options)}"
           else
             # No special options, use an array to skip the extra /bin/sh.
             runner + [pip_command] + pip_options
