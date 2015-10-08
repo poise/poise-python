@@ -48,6 +48,8 @@ def replacement(*args, **kwargs):
     from pip._vendor import pkg_resources
     dists = []
     for raw_req in sys.argv[3:]:
+        if raw_req.startswith('-'):
+          continue
         req = pkg_resources.Requirement.parse(raw_req)
         dist = pkg_resources.working_set.by_key.get(req.key)
         if dist:
