@@ -259,6 +259,19 @@ EOH
           opts[:user] = new_resource.user if new_resource.user
           opts[:group] = new_resource.group if new_resource.group
 
+          # Force a reload in case any users were created earlier in the run.
+          Etc.endpwent
+          Etc.endgrent
+
+          if new_resource.user.is_a?(Integer)
+            user_name = Etc.getpwuid(new_resource.user)
+          else
+            user_name = new_resource.user
+          end
+
+          # HOME needs to be set when using pip
+          opts[:environment] = {'HOME' => Dir.home(user_name)}
+
           python_shell_out!(full_cmd, opts)
         end
 
