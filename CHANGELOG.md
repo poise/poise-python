@@ -1,5 +1,9 @@
 # Poise-Python Changelog
 
+## v1.1.2
+
+* Fix `PythonPackage#response_file_variables` for the Chef 12.6 initializer.
+
 ## v1.1.1
 
 * Fix passing options to the `python_package` resource.
