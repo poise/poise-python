@@ -34,7 +34,11 @@ module PoisePython
       # @param name [String] Name of the virtualenv resource.
       # @return [void]
       def virtualenv(name)
-        parent_python("python_virtualenv[#{name}]")
+        if name.is_a?(PoisePython::Resources::PythonVirtualenv::Resource)
+          parent_python(name)
+        else
+          parent_python("python_virtualenv[#{name}]")
+        end
       end
     end
 
