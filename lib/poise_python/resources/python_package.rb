@@ -91,7 +91,6 @@ EOH
           Poise::Helpers::ChefspecMatchers.create_matcher(:python_package, action)
         end
 
-
         # @!attribute group
         #   System group to install the package.
         #   @return [String, Integer, nil]
