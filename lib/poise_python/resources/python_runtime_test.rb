@@ -40,7 +40,7 @@ module PoisePython
         attribute(:path, kind_of: String, default: lazy { default_path })
 
         def default_path
-          ::File.join('', 'root', "python_test_#{name}")
+          ::File.join('', 'opt', "python_test_#{name}")
         end
       end
 
@@ -58,7 +58,9 @@ module PoisePython
         def action_run
           notifying_block do
             # Top level directory for this test.
-            directory new_resource.path
+            directory new_resource.path do
+              mode '777'
+            end
 
             # Install and log the version.
             python_runtime new_resource.name do
@@ -128,6 +130,38 @@ EOH
             end
             test_import('requests')
             test_import('six')
+
+            # Create a non-root user and test installing with it.
+            test_user = "py#{new_resource.name}"
+            test_home = ::File.join('', 'home', test_user)
+            group test_user do
+              system true
+            end
+            user test_user do
+              comment "Test user for python_runtime_test #{new_resource.name}"
+              gid test_user
+              home test_home
+              shell '/bin/false'
+              system true
+            end
+            directory test_home do
+              mode '700'
+              group test_user
+              user test_user
+            end
+            test_venv = python_virtualenv ::File.join(test_home, 'env') do
+              python new_resource.name
+              user test_user
+            end
+            python_package 'attrs' do
+              user test_user
+              virtualenv test_venv
+            end
+            python_package 'importlib' do
+              user test_user
+              virtualenv test_venv
+            end
+            test_import('attrs', 'attr', python: nil, virtualenv: test_venv, user: test_user)
           end
         end
 
@@ -157,7 +191,7 @@ EOH
           end
         end
 
-        def test_import(name, path=name, python: new_resource.name, virtualenv: nil)
+        def test_import(name, path=name, python: new_resource.name, virtualenv: nil, user: nil)
           # Only queue up this resource once, the ivar is just for tracking.
           @python_import_test ||= file ::File.join(new_resource.path, 'import_version.py') do
             user 'root'
@@ -175,6 +209,7 @@ EOH
 
           python_execute "#{@python_import_test.path} #{name} #{::File.join(new_resource.path, "import_#{path}")}" do
             python python if python
+            user user if user
             virtualenv virtualenv if virtualenv
           end
         end

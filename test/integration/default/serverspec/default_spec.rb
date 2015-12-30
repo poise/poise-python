@@ -20,7 +20,7 @@ set :backend, :exec
 # Set up the shared example for python_runtime_test.
 RSpec.shared_examples 'a python_runtime_test' do |python_name, version=nil|
   let(:python_name) { python_name }
-  let(:python_path) { File.join('', 'root', "python_test_#{python_name}") }
+  let(:python_path) { File.join('', 'opt', "python_test_#{python_name}") }
   # Helper for all the file checks.
   def self.assert_file(rel_path, should_exist=true, &block)
     describe rel_path do
