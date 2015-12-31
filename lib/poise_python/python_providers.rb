@@ -31,6 +31,7 @@ module PoisePython
     autoload :Base, 'poise_python/python_providers/base'
 
     Chef::Platform::ProviderPriorityMap.instance.priority(:python_runtime, [
+      PoisePython::PythonProviders::Dummy,
       PoisePython::PythonProviders::PortablePyPy3,
       PoisePython::PythonProviders::PortablePyPy,
       PoisePython::PythonProviders::Scl,

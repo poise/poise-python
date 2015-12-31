@@ -27,9 +27,18 @@ module PoisePython
     class Dummy < Base
       provides(:dummy)
 
+      # Enable by default on ChefSpec.
+      #
+      # @api private
+      def self.provides_auto?(node, _resource)
+        node.platform?('chefspec')
+      end
+
+      # Manual overrides for dummy data.
+      #
+      # @api private
       def self.default_inversion_options(node, resource)
         super.merge({
-          # Manual overrides for dummy data.
           python_binary: ::File.join('', 'python'),
           python_environment: nil,
         })

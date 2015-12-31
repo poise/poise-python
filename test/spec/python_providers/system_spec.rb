@@ -25,6 +25,7 @@ describe PoisePython::PythonProviders::System do
   step_into(:python_runtime)
   recipe do
     python_runtime 'test' do
+      provider_no_auto 'dummy'
       version node['poise_python_version']
       virtualenv_version false
     end
