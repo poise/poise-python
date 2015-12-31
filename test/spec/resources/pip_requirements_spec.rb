@@ -17,19 +17,20 @@
 require 'spec_helper'
 
 describe PoisePython::Resources::PipRequirements do
-  let(:pip_cmd) { }
+  let(:pip_cmd) { %w{-m pip.__main__ install --requirement /test/requirements.txt} }
   let(:pip_output) { '' }
+  let(:pip_user) { nil }
+  let(:pip_group) { nil }
   step_into(:pip_requirements)
   before do
     allow(File).to receive(:directory?).and_return(false)
     allow(File).to receive(:directory?).with('/test').and_return(true)
   end
   before do
-    expect_any_instance_of(PoisePython::Resources::PipRequirements::Provider).to receive(:python_shell_out!).with(pip_cmd).and_return(double(stdout: pip_output))
+    expect_any_instance_of(PoisePython::Resources::PipRequirements::Provider).to receive(:python_shell_out!).with(pip_cmd, {user: pip_user, group: pip_group}).and_return(double(stdout: pip_output))
   end
 
   context 'with a directory' do
-    let(:pip_cmd) { %w{-m pip.__main__ install --requirement /test/requirements.txt} }
     recipe do
       pip_requirements '/test'
     end
@@ -46,6 +47,28 @@ describe PoisePython::Resources::PipRequirements do
     it { is_expected.to install_pip_requirements('/test/reqs.txt') }
   end # /context with a file
 
+  context 'with a user' do
+    let(:pip_user) { 'testuser' }
+    recipe do
+      pip_requirements '/test' do
+        user 'testuser'
+      end
+    end
+
+    it { is_expected.to install_pip_requirements('/test') }
+  end # /context with a user
+
+  context 'with a group' do
+    let(:pip_group) { 'testgroup' }
+    recipe do
+      pip_requirements '/test' do
+        group 'testgroup'
+      end
+    end
+
+    it { is_expected.to install_pip_requirements('/test') }
+  end # /context with a group
+
   context 'action :upgrade' do
     let(:pip_cmd) { %w{-m pip.__main__ install --upgrade --requirement /test/requirements.txt} }
     recipe do
@@ -58,7 +81,6 @@ describe PoisePython::Resources::PipRequirements do
   end # /context action :upgrade
 
   context 'with output' do
-    let(:pip_cmd) { %w{-m pip.__main__ install --requirement /test/requirements.txt} }
     let(:pip_output) { 'Successfully installed' }
     recipe do
       pip_requirements '/test'

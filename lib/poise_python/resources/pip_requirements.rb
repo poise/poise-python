@@ -44,6 +44,14 @@ module PoisePython
         #   requirements file.
         #   @return [String]
         attribute(:path, kind_of: String, name_attribute: true)
+        # @!attribute group
+        #   System group to install the package.
+        #   @return [String, Integer, nil]
+        attribute(:group, kind_of: [String, Integer, NilClass])
+        # @!attribute user
+        #   System user to install the package.
+        #   @return [String, Integer, nil]
+        attribute(:user, kind_of: [String, Integer, NilClass])
       end
 
       # The default provider for `pip_requirements`.
@@ -80,7 +88,7 @@ module PoisePython
           cmd << '--upgrade' if upgrade
           cmd << '--requirement'
           cmd << requirements_path
-          output = python_shell_out!(cmd).stdout
+          output = python_shell_out!(cmd, user: new_resource.user, group: new_resource.group).stdout
           if output.include?('Successfully installed')
             new_resource.updated_by_last_action(true)
           end

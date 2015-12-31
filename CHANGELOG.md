@@ -1,5 +1,10 @@
 # Poise-Python Changelog
 
+## v1.2.0
+
+* Add support for passing `user` and `group` to `pip_requirements`.
+* Allow passing a virtualenv resource object to the `virtualenv` property.
+
 ## v1.1.2
 
 * Fix `PythonPackage#response_file_variables` for the Chef 12.6 initializer.
