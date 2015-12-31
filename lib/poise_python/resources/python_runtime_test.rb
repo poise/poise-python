@@ -157,10 +157,6 @@ EOH
               user test_user
               virtualenv test_venv
             end
-            python_package 'importlib' do
-              user test_user
-              virtualenv test_venv
-            end
             test_import('attrs', 'attr', python: nil, virtualenv: test_venv, user: test_user)
           end
         end
