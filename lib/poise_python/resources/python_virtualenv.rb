@@ -112,7 +112,7 @@ module PoisePython
         private
 
         def install_python
-          return if ::File.exist?(new_resource.path)
+          return if ::File.exist?(python_binary)
 
           cmd = python_shell_out(%w{-m venv -h})
           if cmd.error?
