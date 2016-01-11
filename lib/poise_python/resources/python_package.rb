@@ -164,7 +164,7 @@ EOH
             version_data[name][:current] = current
           end
           # Check for newer candidates.
-          outdated = pip_outdated(pip_requirements(resource.package_name, version)).stdout
+          outdated = pip_outdated(pip_requirements(resource.package_name, version, parse: true)).stdout
           parse_pip_outdated(outdated).each do |name, candidate|
             # Merge candidates in to the existing versions.
             version_data[name][:candidate] = candidate
@@ -175,13 +175,13 @@ EOH
             @candidate_version = []
             versions = []
             [resource.package_name].flatten.each do |name|
-              ver = version_data[name.downcase]
+              ver = version_data[parse_package_name(name).downcase]
               versions << ver[:current]
               @candidate_version << ver[:candidate]
             end
             resource.version(versions)
           else
-            ver = version_data[resource.package_name.downcase]
+            ver = version_data[parse_package_name(resource.package_name).downcase]
             resource.version(ver[:current])
             @candidate_version = ver[:candidate]
           end
@@ -222,9 +222,11 @@ EOH
         # @param name [String, Array<String>] Name or names for the packages.
         # @param version [String, Array<String>] Version or versions for the
         #   packages.
+        # @param parse [Boolean] Use parsed package names.
         # @return [Array<String>]
-        def pip_requirements(name, version)
+        def pip_requirements(name, version, parse: false)
           [name].flatten.zip([version].flatten).map do |n, v|
+            n = parse_package_name(n) if parse
             v = v.to_s.strip
             if v.empty?
               # No version requirement, send through unmodified.
@@ -318,6 +320,25 @@ EOH
               Chef::Log.debug("[#{new_resource}] Unparsable line in pip list: #{line}")
             end
             memo
+          end
+        end
+
+        # Regexp for package URLs.
+        PACKAGE_NAME_URL = /:\/\/.*?#egg=(.*)$/
+
+        # Regexp for extras.
+        PACKAGE_NAME_EXTRA = /^(.*?)\[.*?\]$/
+
+        # Find the underlying name from a pip input sequence.
+        #
+        # @param raw_name [String] Raw package name.
+        # @return [String]
+        def parse_package_name(raw_name)
+          case raw_name
+          when PACKAGE_NAME_URL, PACKAGE_NAME_EXTRA
+            $1
+          else
+            raw_name
           end
         end
 
