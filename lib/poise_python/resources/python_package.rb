@@ -228,7 +228,10 @@ EOH
           [name].flatten.zip([version].flatten).map do |n, v|
             n = parse_package_name(n) if parse
             v = v.to_s.strip
-            if v.empty?
+            if n =~ /:\/\//
+              # Probably a URI.
+              n
+            elsif v.empty?
               # No version requirement, send through unmodified.
               n
             elsif v =~ /^\d/
