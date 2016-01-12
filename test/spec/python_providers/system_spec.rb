@@ -18,7 +18,6 @@ require 'spec_helper'
 
 describe PoisePython::PythonProviders::System do
   let(:python_version) { '' }
-  let(:chefspec_options) { {platform: 'ubuntu', version: '14.04'} }
   let(:default_attributes) { {poise_python_version: python_version} }
   let(:python_runtime) { chef_run.python_runtime('test') }
   let(:system_package_candidates) { python_runtime.provider_for_action(:install).send(:system_package_candidates, python_version) }
@@ -41,42 +40,55 @@ describe PoisePython::PythonProviders::System do
     end
   end
 
-  context 'with version ""' do
-    let(:python_version) { '' }
-    it_behaves_like 'system provider', %w{python3.5 python35 python3.4 python34 python3.3 python33 python3.2 python32 python3.1 python31 python3.0 python30 python3 python2.7 python27 python2.6 python26 python2.5 python25 python}, 'python3.4'
-  end # /context with version ""
+  context 'on Debian 8.1' do
+    let(:chefspec_options) { {platform: 'debian', version: '8.1'} }
 
-  context 'with version 2' do
-    let(:python_version) { '2' }
-    it_behaves_like 'system provider', %w{python2.7 python27 python2.6 python26 python2.5 python25 python}, 'python2.7'
-  end # /context with version 2
+    context 'with version 3' do
+      let(:python_version) { '3' }
+      it_behaves_like 'system provider', %w{python3.5 python35 python3.4 python34 python3.3 python33 python3.2 python32 python3.1 python31 python3.0 python30 python3 python}, 'python3.4'
+    end # /context with version 3
+  end # /context on Debian 8.1
 
-  context 'with version 3' do
-    let(:python_version) { '3' }
-    it_behaves_like 'system provider', %w{python3.5 python35 python3.4 python34 python3.3 python33 python3.2 python32 python3.1 python31 python3.0 python30 python3 python}, 'python3.4'
-  end # /context with version 3
+  context 'on Ubuntu 14.04' do
+    let(:chefspec_options) { {platform: 'ubuntu', version: '14.04'} }
 
-  context 'with version 2.3' do
-    let(:python_version) { '2.3' }
-    before do
-      default_attributes['poise-python'] ||= {}
-      default_attributes['poise-python']['test'] = {'package_name' => 'python2.3'}
-    end
-    it_behaves_like 'system provider', %w{python2.3 python23 python}, 'python2.3'
-  end # /context with version 2.3
+    context 'with version ""' do
+      let(:python_version) { '' }
+      it_behaves_like 'system provider', %w{python3.5 python35 python3.4 python34 python3.3 python33 python3.2 python32 python3.1 python31 python3.0 python30 python3 python2.7 python27 python2.6 python26 python2.5 python25 python}, 'python3.4'
+    end # /context with version ""
 
-  context 'action :uninstall' do
-    recipe do
-      python_runtime 'test' do
-        action :uninstall
-        version node['poise_python_version']
+    context 'with version 2' do
+      let(:python_version) { '2' }
+      it_behaves_like 'system provider', %w{python2.7 python27 python2.6 python26 python2.5 python25 python}, 'python2.7'
+    end # /context with version 2
+
+    context 'with version 3' do
+      let(:python_version) { '3' }
+      it_behaves_like 'system provider', %w{python3.5 python35 python3.4 python34 python3.3 python33 python3.2 python32 python3.1 python31 python3.0 python30 python3 python}, 'python3.4'
+    end # /context with version 3
+
+    context 'with version 2.3' do
+      let(:python_version) { '2.3' }
+      before do
+        default_attributes['poise-python'] ||= {}
+        default_attributes['poise-python']['test'] = {'package_name' => 'python2.3'}
       end
-    end
+      it_behaves_like 'system provider', %w{python2.3 python23 python}, 'python2.3'
+    end # /context with version 2.3
 
-    it do
-      expect_any_instance_of(described_class).to receive(:uninstall_system_packages)
-      run_chef
-    end
-    it { expect(python_runtime.provider_for_action(:uninstall)).to be_a described_class }
-  end # /context action :uninstall
+    context 'action :uninstall' do
+      recipe do
+        python_runtime 'test' do
+          action :uninstall
+          version node['poise_python_version']
+        end
+      end
+
+      it do
+        expect_any_instance_of(described_class).to receive(:uninstall_system_packages)
+        run_chef
+      end
+      it { expect(python_runtime.provider_for_action(:uninstall)).to be_a described_class }
+    end # /context action :uninstall
+  end # /context on Ubuntu 14.04
 end
