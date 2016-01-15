@@ -4,6 +4,11 @@
 
 * Add support for passing `user` and `group` to `pip_requirements`.
 * Allow passing a virtualenv resource object to the `virtualenv` property.
+* Update PyPy release versions.
+* Make the `python_virtualenv` resource check for `./bin/python` for idempotence
+  instead of the base path.
+* Support for packages with extras in `python_package`.
+* Support for point releases (7.1, 8.1, etc) of Debian in the `system` provider.
 
 ## v1.1.2
 
