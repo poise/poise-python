@@ -277,9 +277,11 @@ notifications will only be triggered if a package is actually installed.
 
 * `path` – Path to the requirements file, or a folder containing the
   requirements file. *(name property)*
+* `group` – System group to install the packages.
 * `python` – Name of the `python_runtime` resource to use. If not specified, the
   most recently declared `python_runtime` will be used. Can also be set to the
   full path to a `python` binary.
+* `user` – System user to install the packages.
 * `virtualenv` – Name of the `python_virtualenv` resource to use. This is
   mutually exclusive with the `python` property.
 
