@@ -31,9 +31,9 @@ describe PoisePython::PythonProviders::System do
     end
   end
 
-  shared_examples_for 'system provider' do |candidates, pkg|
+  shared_examples_for 'system provider' do |candidates=nil, pkg|
     it { expect(python_runtime.provider_for_action(:install)).to be_a described_class }
-    it { expect(system_package_candidates).to eq candidates }
+    it { expect(system_package_candidates).to eq candidates } if candidates
     it { is_expected.to install_poise_languages_system(pkg) }
     it do
       expect_any_instance_of(described_class).to receive(:install_system_packages)
@@ -64,6 +64,23 @@ describe PoisePython::PythonProviders::System do
     end
     it_behaves_like 'system provider', %w{python2.3 python23 python}, 'python2.3'
   end # /context with version 2.3
+
+  context 'on Debian 8.1' do
+    before { chefspec_options.update(platform: 'debian', version: '8.1') }
+    it_behaves_like 'system provider', 'python3.4'
+  end # /context on Debian 8.1
+
+  context 'on CentOS 7' do
+    before { chefspec_options.update(platform: 'centos', version: '7.0') }
+    recipe do
+      python_runtime 'test' do
+        provider :system
+        version node['poise_python_version']
+        virtualenv_version false
+      end
+    end
+    it_behaves_like 'system provider', 'python'
+  end # /context on Debian 8.1
 
   context 'action :uninstall' do
     recipe do
