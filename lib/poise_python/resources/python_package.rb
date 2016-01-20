@@ -301,6 +301,10 @@ EOH
             # boto (Current: 2.25.0 Latest: 2.38.0 [wheel])
             if md = line.match(/^(\S+)\s+\(.*?latest:\s+([^\s,]+).*\)$/i)
               memo[md[1].downcase] = md[2]
+            # pip 8.0 line:
+            # simplejson (3.3.2) - Latest: 3.8.1 [sdist]
+            elsif md = line.match(/^(\S+).*-\s+latest:\s+([^\s,]+)/i)
+              memo[md[1].downcase] = md[2]
             else
               Chef::Log.debug("[#{new_resource}] Unparsable line in pip outdated: #{line}")
             end
