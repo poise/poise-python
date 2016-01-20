@@ -86,6 +86,7 @@ module PoisePython
           notifying_block do
             python_package 'pip' do
               action :uninstall
+              parent_python new_resource.parent
             end
           end
         end
@@ -142,6 +143,7 @@ module PoisePython
             # Use pip to upgrade (or downgrade) itself.
             python_package 'pip' do
               action :upgrade
+              parent_python new_resource.parent
               version new_resource.version if new_resource.version
             end
           end
