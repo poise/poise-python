@@ -1,5 +1,9 @@
 # Poise-Python Changelog
 
+## v1.2.1
+
+* Compatibility with Pip 8.0.
+
 ## v1.2.0
 
 * Add support for passing `user` and `group` to `pip_requirements`.
