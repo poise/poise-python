@@ -119,6 +119,11 @@ module PoisePython
             test_import('pytest', 'pytest_venv', python: nil, virtualenv: ::File.join(new_resource.path, 'venv'))
 
             # Create and install a requirements file.
+            # Running this in a venv because of pip 8.0 and Ubuntu packaing
+            # both requests and six.
+            python_virtualenv ::File.join(new_resource.path, 'venv2') do
+              python new_resource.name
+            end
             file ::File.join(new_resource.path, 'requirements.txt') do
               content <<-EOH
 requests==2.7.0
@@ -126,10 +131,10 @@ six==1.8.0
 EOH
             end
             pip_requirements ::File.join(new_resource.path, 'requirements.txt') do
-              python new_resource.name
+              virtualenv ::File.join(new_resource.path, 'venv2')
             end
-            test_import('requests')
-            test_import('six')
+            test_import('requests', python: nil, virtualenv: ::File.join(new_resource.path, 'venv2'))
+            test_import('six', python: nil, virtualenv: ::File.join(new_resource.path, 'venv2'))
 
             # Create a non-root user and test installing with it.
             test_user = "py#{new_resource.name}"
