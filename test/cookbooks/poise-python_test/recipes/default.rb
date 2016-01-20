@@ -21,14 +21,20 @@ package 'lsb-release' if platform?('debian') && node['platform_version'].start_w
 
 python_runtime_test '2'
 
-python_runtime_test '3'
+if node['platform'] == 'ubuntu' && node['platform_version'] == '12.04'
+  # Can't deal with Python 3.2 today.
+  file '/no_py3'
+  file '/no_system'
+else
+  python_runtime_test '3'
+
+  python_runtime_test 'system' do
+    version ''
+    runtime_provider :system
+  end
+end
 
 python_runtime_test 'pypy'
-
-python_runtime_test 'system' do
-  version ''
-  runtime_provider :system
-end
 
 if platform_family?('rhel')
   python_runtime_test 'scl' do

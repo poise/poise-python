@@ -81,15 +81,15 @@ RSpec.shared_examples 'a python_runtime_test' do |python_name, version=nil|
   end
 end
 
-describe 'python 2' do
+describe 'python 2', unless: File.exist?('/no_py2') do
   it_should_behave_like 'a python_runtime_test', '2', '2'
 end
 
-describe 'python 3' do
+describe 'python 3', unless: File.exist?('/no_py3') do
   it_should_behave_like 'a python_runtime_test', '3', '3'
 end
 
-describe 'pypy' do
+describe 'pypy', unless: File.exist?('/no_pypy') do
   it_should_behave_like 'a python_runtime_test', 'pypy'
 end
 
