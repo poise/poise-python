@@ -99,10 +99,6 @@ module PoisePython
         def bootstrap_pip
           # Always updated if we have hit this point.
           new_resource.updated_by_last_action(true)
-          # Pending https://github.com/pypa/pip/issues/1087.
-          if new_resource.version
-            Chef::Log.warn("pip does not support bootstrapping a specific version, see https://github.com/pypa/pip/issues/1087.")
-          end
           # Use a temp file to hold the installer.
           Tempfile.create(['get-pip', '.py']) do |temp|
             # Download the get-pip.py.
@@ -115,7 +111,12 @@ module PoisePython
             # al. Disable setuptools and wheel as we will install those later.
             # Use the environment vars instead of CLI arguments so I don't have
             # to deal with bootstrap versions that don't support --no-wheel.
-            poise_shell_out!([new_resource.parent.python_binary, temp.path], environment: new_resource.parent.python_environment.merge('PIP_NO_SETUPTOOLS' => '1', 'PIP_NO_WHEEL' => '1'))
+            if new_resource.version
+              pip_requirements = 'pip==' + new_resource.version
+              poise_shell_out!([new_resource.parent.python_binary, temp.path, pip_requirements], environment: new_resource.parent.python_environment.merge('PIP_NO_SETUPTOOLS' => '1', 'PIP_NO_WHEEL' => '1'))
+            else
+              poise_shell_out!([new_resource.parent.python_binary, temp.path], environment: new_resource.parent.python_environment.merge('PIP_NO_SETUPTOOLS' => '1', 'PIP_NO_WHEEL' => '1'))
+            end
           end
           new_pip_version = pip_version
           if new_resource.version && new_pip_version != new_resource.version
