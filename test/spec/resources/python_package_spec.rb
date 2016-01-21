@@ -39,7 +39,7 @@ describe PoisePython::Resources::PythonPackage do
         let(:package_name) { 'foo' }
         before do
           stub_cmd(%w{-m pip.__main__ list}, stdout: '')
-          stub_cmd(%w{- list --outdated foo}, input: kind_of(String), stdout: "foo (Current: 0 Latest: 1.0.0 [wheel])\n")
+          stub_cmd(%w{- foo}, input: kind_of(String), stdout: '{"foo":"1.0.0"}')
         end
 
         its(:version) { is_expected.to be nil }
@@ -50,7 +50,7 @@ describe PoisePython::Resources::PythonPackage do
         let(:package_name) { %w{foo bar} }
         before do
           stub_cmd(%w{-m pip.__main__ list}, stdout: '')
-          stub_cmd(%w{- list --outdated foo bar}, input: kind_of(String), stdout: "foo (Current: 0 Latest: 1.0.0 [wheel])\nbar (Current: 0 Latest: 2.0.0 [wheel])\n")
+          stub_cmd(%w{- foo bar}, input: kind_of(String), stdout: '{"foo":"1.0.0","bar":"2.0.0"}')
         end
 
         its(:version) { is_expected.to eq [nil, nil] }
@@ -61,7 +61,7 @@ describe PoisePython::Resources::PythonPackage do
         let(:package_name) { 'foo[bar]' }
         before do
           stub_cmd(%w{-m pip.__main__ list}, stdout: '')
-          stub_cmd(%w{- list --outdated foo}, input: kind_of(String), stdout: "foo (Current: 0 Latest: 1.0.0 [wheel])\n")
+          stub_cmd(%w{- foo}, input: kind_of(String), stdout: '{"foo":"1.0.0"}')
         end
 
         its(:version) { is_expected.to be nil }
