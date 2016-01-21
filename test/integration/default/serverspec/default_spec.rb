@@ -87,7 +87,7 @@ RSpec.shared_examples 'a python_runtime_test' do |python_name, version=nil|
   end
 
   describe 'user install' do
-    assert_file('import_attrs')
+    # assert_file('import_attrs')
   end
 end
 
