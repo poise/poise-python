@@ -44,3 +44,22 @@ if platform_family?('rhel')
 else
   file '/no_scl'
 end
+
+# Specific test for pip reversion working correctly.
+python_runtime 'pip1' do
+  pip_version '7.1.2'
+  provider :portable_pypy
+  options path: '/opt/pip1'
+  version ''
+end
+python_runtime 'pip2' do
+  provider :portable_pypy
+  options path: '/opt/pip2'
+  version ''
+end
+python_runtime 'pip2b' do
+  pip_version '7.1.2'
+  provider :portable_pypy
+  options path: '/opt/pip2'
+  version ''
+end

@@ -100,3 +100,15 @@ end
 describe 'scl provider', unless: File.exist?('/no_scl') do
   it_should_behave_like 'a python_runtime_test', 'scl'
 end
+
+describe 'pip reversion test' do
+  describe command('/opt/pip1/bin/pypy -m pip --version') do
+    its(:exit_status) { is_expected.to eq 0 }
+    its(:stdout) { is_expected.to include '7.1.2' }
+  end
+
+  describe command('/opt/pip2/bin/pypy -m pip --version') do
+    its(:exit_status) { is_expected.to eq 0 }
+    its(:stdout) { is_expected.to include '7.1.2' }
+  end
+end
