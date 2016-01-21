@@ -28,6 +28,8 @@ module PoisePython
     module PythonRuntimePip
       # URL for the default get-pip.py script.
       DEFAULT_GET_PIP_URL = 'https://bootstrap.pypa.io/get-pip.py'
+      # Earliest version of pip we will try upgrading in-place.
+      PIP_INPLACE_VERSION = Gem::Version.create('7.0.0')
 
       # A `python_runtime_pip` resource to install/upgrade pip itself. This is
       # used internally by `python_runtime` and is not intended to be a public
@@ -72,8 +74,10 @@ module PoisePython
         #
         # @return [void]
         def action_install
+          if new_resource.version && current_resource.version == new_resource.version
+            return # Desired version is installed, even if ancient.
           # If you have older than 7.0.0, we're re-bootstraping because lolno.
-          if current_resource.version && Gem::Version.create(current_resource.version) >= Gem::Version.create('7.0.0')
+          elsif current_resource.version && Gem::Version.create(current_resource.version) >= PIP_INPLACE_VERSION
             install_pip
           else
             bootstrap_pip
