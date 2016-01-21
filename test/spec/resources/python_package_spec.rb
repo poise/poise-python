@@ -173,48 +173,6 @@ describe PoisePython::Resources::PythonPackage do
       end # /describe action :remove
     end # /describe actions
 
-    describe '#parse_pip_outdated' do
-      let(:text) { '' }
-      subject { test_provider.send(:parse_pip_outdated, text) }
-
-      context 'with no content' do
-        it { is_expected.to eq({}) }
-      end # /context with no content
-
-      context 'with standard content' do
-        let(:text) { <<-EOH }
-boto (Current: 2.25.0 Latest: 2.38.0 [wheel])
-botocore (Current: 0.56.0 Latest: 1.1.1 [wheel])
-certifi (Current: 14.5.14 Latest: 2015.4.28 [wheel])
-cffi (Current: 0.8.1 Latest: 1.1.2 [sdist])
-Fabric (Current: 1.9.1 Latest: 1.10.2 [wheel])
-EOH
-        it { is_expected.to eq({'boto' => '2.38.0', 'botocore' => '1.1.1', 'certifi' => '2015.4.28', 'cffi' => '1.1.2', 'fabric' => '1.10.2'}) }
-      end # /context with standard content
-
-      context 'with pip 8.0 content' do
-        let(:text) { <<-EOH }
-boto (2.38.0) - Latest: 2.39.0 [wheel]
-botocore (1.3.14) - Latest: 1.3.21 [wheel]
-certifi (14.5.14) - Latest: 2015.11.20.1 [wheel]
-cffi (0.8.1) - Latest: 1.5.0 [wheel]
-Fabric (1.9.1) - Latest: 1.10.2 [wheel]
-EOH
-        it { is_expected.to eq({'boto' => '2.39.0', 'botocore' => '1.3.21', 'certifi' => '2015.11.20.1', 'cffi' => '1.5.0', 'fabric' => '1.10.2'}) }
-      end # /context with pip 8.0 content
-
-      context 'with malformed content' do
-        let(:text) { <<-EOH }
-boto (Current: 2.25.0 Latest: 2.38.0 [wheel])
-botocore (Current: 0.56.0 Latest: 1.1.1 [wheel])
-certifi (Current: 14.5.14 Latest: 2015.4.28 [wheel])
-cffi (Current: 0.8.1 Latest: 1.1.2 [sdist])
-Fabric (Future: 1.9.1 [wheel])
-EOH
-        it { is_expected.to eq({'boto' => '2.38.0', 'botocore' => '1.1.1', 'certifi' => '2015.4.28', 'cffi' => '1.1.2'}) }
-      end # /context with malformed content
-    end # /describe #parse_pip_outdated
-
     describe '#parse_pip_list' do
       let(:text) { '' }
       subject { test_provider.send(:parse_pip_list, text) }
