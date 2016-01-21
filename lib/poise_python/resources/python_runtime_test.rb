@@ -136,6 +136,16 @@ EOH
             test_import('requests', python: nil, virtualenv: ::File.join(new_resource.path, 'venv2'))
             test_import('six', python: nil, virtualenv: ::File.join(new_resource.path, 'venv2'))
 
+            # Install a non-latest version of a package.
+            python_virtualenv ::File.join(new_resource.path, 'venv3') do
+              python new_resource.name
+            end
+            python_package 'requests' do
+              version '2.8.0'
+              virtualenv ::File.join(new_resource.path, 'venv3')
+            end
+            test_import('requests', 'requests_version', python: nil, virtualenv: ::File.join(new_resource.path, 'venv3'))
+
             # Create a non-root user and test installing with it.
             test_user = "py#{new_resource.name}"
             test_home = ::File.join('', 'home', test_user)

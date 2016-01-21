@@ -79,6 +79,16 @@ RSpec.shared_examples 'a python_runtime_test' do |python_name, version=nil|
       its(:content) { is_expected.to eq '1.8.0' }
     end
   end
+
+  describe 'non default version' do
+    assert_file('import_requests_version') do
+      its(:content) { is_expected.to eq '2.8.0' }
+    end
+  end
+
+  describe 'user install' do
+    assert_file('import_attrs')
+  end
 end
 
 describe 'python 2', unless: File.exist?('/no_py2') do
