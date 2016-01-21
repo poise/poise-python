@@ -72,7 +72,8 @@ module PoisePython
         #
         # @return [void]
         def action_install
-          if current_resource.version
+          # If you have older than 7.0.0, we're re-bootstraping because lolno.
+          if current_resource.version && Gem::Version.create(current_resource.version) >= Gem::Version.create('7.0.0')
             install_pip
           else
             bootstrap_pip
