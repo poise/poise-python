@@ -118,7 +118,7 @@ module PoisePython
               # al. Disable setuptools and wheel as we will install those later.
               # Use the environment vars instead of CLI arguments so I don't have
               # to deal with bootstrap versions that don't support --no-wheel.
-              boostrap_cmd = [new_resource.parent.python_binary, temp.path]
+              boostrap_cmd = [new_resource.parent.python_binary, temp.path, '--upgrade', '--force-reinstall']
               boostrap_cmd << "pip==#{new_resource.version}" if new_resource.version
               Chef::Log.debug("[#{new_resource}] Running pip bootstrap command: #{boostrap_cmd.join(' ')}")
               poise_shell_out!(boostrap_cmd, environment: new_resource.parent.python_environment.merge('PIP_NO_SETUPTOOLS' => '1', 'PIP_NO_WHEEL' => '1'))
