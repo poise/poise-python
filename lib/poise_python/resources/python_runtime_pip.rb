@@ -76,6 +76,7 @@ module PoisePython
         def action_install
           Chef::Log.debug("[#{new_resource}] Installing pip #{new_resource.version || 'latest'}, currently #{current_resource.version || 'not installed'}")
           if new_resource.version && current_resource.version == new_resource.version
+            Chef::Log.debug("[#{new_resource}] Pip #{current_resource.version} is already at requested version")
             return # Desired version is installed, even if ancient.
           # If you have older than 7.0.0, we're re-bootstraping because lolno.
           elsif current_resource.version && Gem::Version.create(current_resource.version) >= PIP_INPLACE_VERSION
@@ -119,6 +120,7 @@ module PoisePython
               # to deal with bootstrap versions that don't support --no-wheel.
               boostrap_cmd = [new_resource.parent.python_binary, temp.path]
               boostrap_cmd << "pip==#{new_resource.version}" if new_resource.version
+              Chef::Log.debug("[#{new_resource}] Running pip bootstrap command: #{boostrap_cmd.join(' ')}")
               poise_shell_out!(boostrap_cmd, environment: new_resource.parent.python_environment.merge('PIP_NO_SETUPTOOLS' => '1', 'PIP_NO_WHEEL' => '1'))
             end
             new_pip_version = pip_version
@@ -162,7 +164,9 @@ module PoisePython
         #
         # @return [String, nil]
         def pip_version
-          cmd = poise_shell_out([new_resource.parent.python_binary, '-m', 'pip.__main__', '--version'], environment: new_resource.parent.python_environment)
+          version_cmd = [new_resource.parent.python_binary, '-m', 'pip.__main__', '--version']
+          Chef::Log.debug("[#{new_resource}] Running pip version command: #{version_cmd.join(' ')}")
+          cmd = poise_shell_out(version_cmd, environment: new_resource.parent.python_environment)
           if cmd.error?
             # Not installed, probably.
             nil
