@@ -37,8 +37,8 @@ import re
 import sys
 
 import pip
-if re.match(r'0|1|6\.0', pip.__version__):
-  sys.stderr.write('The python_package resource requires pip >= 6.1.0, currently '+pip.__version__+'\n')
+if re.match(r'0|1|6\\.0', pip.__version__):
+  sys.stderr.write('The python_package resource requires pip >= 6.1.0, currently '+pip.__version__+'\\n')
   sys.exit(1)
 
 from pip.commands import InstallCommand
