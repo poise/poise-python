@@ -4,14 +4,8 @@ cache: bundler
 language: ruby
 rvm:
 - '2.2'
-addons:
-  apt:
-    packages:
-    - libgecode-dev
 env:
   global:
-  - USE_SYSTEM_GECODE=true
-  - KITCHEN_LOCAL_YAML=.kitchen.travis.yml
   - secure: j4GV/0NXC6p/+XxgK2isMCzccR7ry8cxLJZZbJN5P+958lLGmYtPPsfAN+aRzcR3Uc/alLcsjXvceCjJWU7qYpkN1x9cn564J1X3OIOygi6xdYQIMLL5Guxp01QYabFlrmZeUnTVMTkdR1H4aRrpzW4kTuc5hbIZaJl0enEe1Dd+vbCw2GOTXFnPTeLDCaCSNXXhXmqqWD64leFR2PTwx8fwrXyCB/bDRXhFdsFA5Q/tCGW7PDaYujbqSCegpuz+uvHoM5S2k2XY3pShWZm9WcmEzCLEfhOGCc1s+ia7TZ0iV7kzEq11mNTdSl6nJtBUiKsgqw1TRPFhhUj2Bp/K+cNsd06rtFE3In2zbqbgyJ0qnyQHs2FZO//ve8bug+B0lA3i6SantruS1Fc9NjwjqzOmqmaqNhnVl1jEQTOB3JUC465QShySF0aJtjE5khD7PzGwCw6cqhPBLH5ZTmqCYvl/egYLMlvVr1Nboa+0YFdzUqoTFJpRTsu89l8+1+Eu9pvHn0CwsjWmEVHahIw/GEBjhLPDinquJNxWz1q49ozlohntbRmWhbgzz6D4wPrbBdyW7rYm8p6d2sOy6Op2zsVv4c7Dj3pcLLd9J5o6RaNxf4wLd5VFLNJR6/wldsZXGxV/iP16oyasabYIQYZNbP0U1hZiUpLQ5cvKYc6xRTM=
 bundler_args: "--binstubs=$PWD/bin --jobs 3 --retry 3"
 script:
