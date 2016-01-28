@@ -37,6 +37,7 @@ import re
 import sys
 
 import pip
+# Don't use pkg_resources because I don't want to require it before this anyway.
 if re.match(r'0|1|6\\.0', pip.__version__):
   sys.stderr.write('The python_package resource requires pip >= 6.1.0, currently '+pip.__version__+'\\n')
   sys.exit(1)
