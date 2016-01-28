@@ -33,12 +33,17 @@ module PoisePython
       # install. Probably not 100% bulletproof.
       PIP_HACK_SCRIPT = <<-EOH
 import json
+import re
 import sys
+
+import pip
+if re.match(r'0|1|6\.0', pip.__version__):
+  sys.stderr.write('The python_package resource requires pip >= 6.1.0, currently '+pip.__version__+'\n')
+  sys.exit(1)
 
 from pip.commands import InstallCommand
 from pip.index import PackageFinder
 from pip.req import InstallRequirement
-from pip._vendor import pkg_resources
 
 
 packages = {}
@@ -49,15 +54,17 @@ with cmd._build_session(options) as session:
     index_urls = []
   else:
     index_urls = [options.index_url] + options.extra_index_urls
-  finder = PackageFinder(
+  finder_options = dict(
     find_links=options.find_links,
-    format_control=options.format_control,
     index_urls=index_urls,
-    trusted_hosts=options.trusted_hosts,
     allow_all_prereleases=options.pre,
     process_dependency_links=options.process_dependency_links,
+    trusted_hosts=options.trusted_hosts,
     session=session,
   )
+  if getattr(options, 'format_control', None):
+    finder_options['format_control'] = options.format_control
+  finder = PackageFinder(**finder_options)
   find_all = getattr(finder, 'find_all_candidates', getattr(finder, '_find_all_versions', None))
   for arg in args:
     req = InstallRequirement.from_line(arg)
