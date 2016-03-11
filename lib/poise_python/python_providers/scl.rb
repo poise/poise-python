@@ -44,8 +44,8 @@ module PoisePython
       })
       scl_package('2.7.8', 'python27', 'python27-python-devel', {
         ['redhat', 'centos'] => {
-          '~> 7.0' => 'https://www.softwarecollections.org/en/scls/rhscl/python27/epel-7-x86_64/download/rhscl-python27-epel-7-x86_64.noarch.rpm',
-          '~> 6.0' => 'https://www.softwarecollections.org/en/scls/rhscl/python27/epel-6-x86_64/download/rhscl-python27-epel-6-x86_64.noarch.rpm',
+          '~> 7.0' => 'https://www.softwarecollections.org/repos/rhscl/python27/epel-7-x86_64/noarch/rhscl-python27-epel-7-x86_64-1-2.noarch.rpm',
+          '~> 6.0' => 'https://www.softwarecollections.org/repos/rhscl/python27/epel-6-x86_64/noarch/rhscl-python27-epel-6-x86_64-1-2.noarch.rpm',
         },
         'fedora' => {
           '~> 21.0' => 'https://www.softwarecollections.org/en/scls/rhscl/python27/fedora-21-x86_64/download/rhscl-python27-fedora-21-x86_64.noarch.rpm',
