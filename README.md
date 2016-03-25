@@ -325,7 +325,7 @@ end
 The `scl` provider installs Python using the [Software Collections](https://www.softwarecollections.org/)
 packages. This is only available on RHEL, CentOS, and Fedora. SCL offers more
 recent versions of Python than the system packages for the most part. If an SCL
-package exists for the requests version, it will be used in preference to the
+package exists for the requested version, it will be used in preference to the
 `system` provider.
 
 ```ruby
