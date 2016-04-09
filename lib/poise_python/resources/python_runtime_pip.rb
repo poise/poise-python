@@ -107,7 +107,10 @@ module PoisePython
           # Always updated if we have hit this point.
           converge_by("Bootstrapping pip #{new_resource.version || 'latest'} from #{new_resource.get_pip_url}") do
             # Use a temp file to hold the installer.
-            Tempfile.create(['get-pip', '.py']) do |temp|
+            # Put `Tempfile.create` back when Chef on Windows has a newer Ruby.
+            # Tempfile.create(['get-pip', '.py']) do |temp|
+            temp = Tempfile.new(['get-pip', '.py'])
+            begin
               # Download the get-pip.py.
               get_pip = Chef::HTTP.new(new_resource.get_pip_url).get('')
               # Write it to the temp file.
@@ -122,6 +125,9 @@ module PoisePython
               boostrap_cmd << "pip==#{new_resource.version}" if new_resource.version
               Chef::Log.debug("[#{new_resource}] Running pip bootstrap command: #{boostrap_cmd.join(' ')}")
               poise_shell_out!(boostrap_cmd, environment: new_resource.parent.python_environment.merge('PIP_NO_SETUPTOOLS' => '1', 'PIP_NO_WHEEL' => '1'))
+            ensure
+              temp.close unless temp.closed?
+              temp.unlink
             end
             new_pip_version = pip_version
             if new_resource.version && new_pip_version != new_resource.version

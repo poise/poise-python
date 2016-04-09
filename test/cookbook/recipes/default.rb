@@ -34,7 +34,11 @@ else
   end
 end
 
-python_runtime_test 'pypy'
+if node.platform_family?('windows')
+  file '/no_pypy'
+else
+  python_runtime_test 'pypy'
+end
 
 if platform_family?('rhel')
   python_runtime_test 'scl' do
@@ -45,21 +49,23 @@ else
   file '/no_scl'
 end
 
-# Specific test for pip reversion working correctly.
-python_runtime 'pip1' do
-  pip_version '7.1.2'
-  provider :portable_pypy
-  options path: '/opt/pip1'
-  version ''
-end
-python_runtime 'pip2' do
-  provider :portable_pypy
-  options path: '/opt/pip2'
-  version ''
-end
-python_runtime 'pip2b' do
-  pip_version '7.1.2'
-  provider :portable_pypy
-  options path: '/opt/pip2'
-  version ''
+unless node.platform_family?('windows') # For now
+  # Specific test for pip reversion working correctly.
+  python_runtime 'pip1' do
+    pip_version '7.1.2'
+    provider :portable_pypy
+    options path: '/opt/pip1'
+    version ''
+  end
+  python_runtime 'pip2' do
+    provider :portable_pypy
+    options path: '/opt/pip2'
+    version ''
+  end
+  python_runtime 'pip2b' do
+    pip_version '7.1.2'
+    provider :portable_pypy
+    options path: '/opt/pip2'
+    version ''
+  end
 end

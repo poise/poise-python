@@ -98,7 +98,11 @@ module PoisePython
         alias_method :action_delete, :action_uninstall
 
         def python_binary
-          ::File.join(new_resource.path, 'bin', 'python')
+          if node.platform_family?('windows')
+            ::File.join(new_resource.path, 'Scripts', 'python.exe')
+          else
+            ::File.join(new_resource.path, 'bin', 'python')
+          end
         end
 
         def python_environment

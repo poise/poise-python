@@ -40,7 +40,7 @@ module PoisePython
         attribute(:path, kind_of: String, default: lazy { default_path })
 
         def default_path
-          ::File.join('', 'opt', "python_test_#{name}")
+          ::File.join('', "python_test_#{name}")
         end
       end
 
@@ -187,8 +187,8 @@ EOH
         def test_version(python: new_resource.name, virtualenv: nil)
           # Only queue up this resource once, the ivar is just for tracking.
           @python_version_test ||= file ::File.join(new_resource.path, 'python_version.py') do
-            user 'root'
-            group 'root'
+            user node.value_for_platform_family(windows: Poise::Utils::Win32.admin_user, default: 'root')
+            group node['root_group']
             mode '644'
             content <<-EOH
 import sys, platform
@@ -205,8 +205,8 @@ EOH
         def test_import(name, path=name, python: new_resource.name, virtualenv: nil, user: nil)
           # Only queue up this resource once, the ivar is just for tracking.
           @python_import_test ||= file ::File.join(new_resource.path, 'import_version.py') do
-            user 'root'
-            group 'root'
+            user node.value_for_platform_family(windows: Poise::Utils::Win32.admin_user, default: 'root')
+            group node['root_group']
             mode '644'
             content <<-EOH
 try:

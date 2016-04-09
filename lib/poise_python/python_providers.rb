@@ -17,6 +17,7 @@
 require 'chef/platform/provider_priority_map'
 
 require 'poise_python/python_providers/dummy'
+require 'poise_python/python_providers/msi'
 require 'poise_python/python_providers/portable_pypy'
 require 'poise_python/python_providers/portable_pypy3'
 require 'poise_python/python_providers/scl'
@@ -32,6 +33,7 @@ module PoisePython
 
     Chef::Platform::ProviderPriorityMap.instance.priority(:python_runtime, [
       PoisePython::PythonProviders::Dummy,
+      PoisePython::PythonProviders::Msi,
       PoisePython::PythonProviders::PortablePyPy3,
       PoisePython::PythonProviders::PortablePyPy,
       PoisePython::PythonProviders::Scl,
