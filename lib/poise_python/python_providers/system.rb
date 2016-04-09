@@ -37,7 +37,7 @@ module PoisePython
           '12.04' => %w{python3.2 python2.7},
           '10.04' => %w{python3.1 python2.6},
         },
-        rhel: {default: %w{python}},
+        redhat: {default: %w{python}},
         centos: {default: %w{python}},
         fedora: {default: %w{python3 python}},
         amazon: {default: %w{python34 python27 python26 python}},
