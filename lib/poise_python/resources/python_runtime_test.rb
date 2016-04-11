@@ -146,33 +146,36 @@ EOH
             end
             test_import('requests', 'requests_version', python: nil, virtualenv: ::File.join(new_resource.path, 'venv3'))
 
-            # Create a non-root user and test installing with it.
-            test_user = "py#{new_resource.name}"
-            test_home = ::File.join('', 'home', test_user)
-            group test_user do
-              system true
+            # Don't run the user tests on Windows.
+            unless node.platform_family?('windows')
+              # Create a non-root user and test installing with it.
+              test_user = "py#{new_resource.name}"
+              test_home = ::File.join('', 'home', test_user)
+              group 'g'+test_user do
+                system true
+              end
+              user test_user do
+                comment "Test user for python_runtime_test #{new_resource.name}"
+                gid 'g'+test_user
+                home test_home
+                shell '/bin/false'
+                system true
+              end
+              directory test_home do
+                mode '700'
+                group 'g'+test_user
+                user test_user
+              end
+              test_venv = python_virtualenv ::File.join(test_home, 'env') do
+                python new_resource.name
+                user test_user
+              end
+              python_package 'attrs' do
+                user test_user
+                virtualenv test_venv
+              end
+              test_import('attrs', 'attr', python: nil, virtualenv: test_venv, user: test_user)
             end
-            user test_user do
-              comment "Test user for python_runtime_test #{new_resource.name}"
-              gid test_user
-              home test_home
-              shell '/bin/false'
-              system true
-            end
-            directory test_home do
-              mode '700'
-              group test_user
-              user test_user
-            end
-            test_venv = python_virtualenv ::File.join(test_home, 'env') do
-              python new_resource.name
-              user test_user
-            end
-            python_package 'attrs' do
-              user test_user
-              virtualenv test_venv
-            end
-            test_import('attrs', 'attr', python: nil, virtualenv: test_venv, user: test_user)
           end
         end
 
@@ -187,7 +190,7 @@ EOH
         def test_version(python: new_resource.name, virtualenv: nil)
           # Only queue up this resource once, the ivar is just for tracking.
           @python_version_test ||= file ::File.join(new_resource.path, 'python_version.py') do
-            user node.value_for_platform_family(windows: Poise::Utils::Win32.admin_user, default: 'root')
+            user node.platform_family?('windows') ? Poise::Utils::Win32.admin_user : 'root'
             group node['root_group']
             mode '644'
             content <<-EOH
@@ -205,7 +208,7 @@ EOH
         def test_import(name, path=name, python: new_resource.name, virtualenv: nil, user: nil)
           # Only queue up this resource once, the ivar is just for tracking.
           @python_import_test ||= file ::File.join(new_resource.path, 'import_version.py') do
-            user node.value_for_platform_family(windows: Poise::Utils::Win32.admin_user, default: 'root')
+            user node.platform_family?('windows') ? Poise::Utils::Win32.admin_user : 'root'
             group node['root_group']
             mode '644'
             content <<-EOH

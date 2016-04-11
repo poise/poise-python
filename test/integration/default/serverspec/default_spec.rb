@@ -14,8 +14,16 @@
 # limitations under the License.
 #
 
+require 'rbconfig'
+
 require 'serverspec'
-set :backend, :exec
+
+if RbConfig::CONFIG['host_os'] =~ /mswin|mingw|cygwin/
+  set :backend, :cmd
+  set :os, :family => 'windows'
+else
+  set :backend, :exec
+end
 
 # Set up the shared example for python_runtime_test.
 RSpec.shared_examples 'a python_runtime_test' do |python_name, version=nil|
@@ -73,16 +81,16 @@ RSpec.shared_examples 'a python_runtime_test' do |python_name, version=nil|
 
   describe 'pip_requirements' do
     assert_file('import_requests') do
-      its(:content) { is_expected.to eq '2.7.0' }
+      its(:content) { is_expected.to match /^2\.7\.0\s*$/ }
     end
     assert_file('import_six') do
-      its(:content) { is_expected.to eq '1.8.0' }
+      its(:content) { is_expected.to match /^1\.8\.0\s*$/ }
     end
   end
 
   describe 'non default version' do
     assert_file('import_requests_version') do
-      its(:content) { is_expected.to eq '2.8.0' }
+      its(:content) { is_expected.to match /^2\.8\.0\s*$/ }
     end
   end
 
@@ -111,13 +119,19 @@ describe 'scl provider', unless: File.exist?('/no_scl') do
   it_should_behave_like 'a python_runtime_test', 'scl'
 end
 
-describe 'pip reversion test' do
-  describe command('/opt/pip1/bin/pypy -m pip --version') do
+describe 'pip reversion test', unless: File.exist?('/no_pip') do
+  path_suffix = if os[:family] == 'windows'
+    '/Scripts/python.exe'
+  else
+    '/bin/pypy'
+  end
+
+  describe command("/test_pip1#{path_suffix} -m pip --version") do
     its(:exit_status) { is_expected.to eq 0 }
     its(:stdout) { is_expected.to include '7.1.2' }
   end
 
-  describe command('/opt/pip2/bin/pypy -m pip --version') do
+  describe command("/test_pip2#{path_suffix} -m pip --version") do
     its(:exit_status) { is_expected.to eq 0 }
     its(:stdout) { is_expected.to include '7.1.2' }
   end
