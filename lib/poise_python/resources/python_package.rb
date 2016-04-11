@@ -301,7 +301,7 @@ EOH
         # @param text [String] Output to parse.
         # @return [Hash<String, String>]
         def parse_pip_list(text)
-          text.split(/\n/).inject({}) do |memo, line|
+          text.split(/\r?\n/).inject({}) do |memo, line|
             # Example of a line:
             # boto (2.25.0)
             if md = line.match(/^(\S+)\s+\(([^\s,]+).*\)$/i)
