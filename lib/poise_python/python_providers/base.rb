@@ -146,7 +146,7 @@ module PoisePython
         # Captured because #options conflicts with Chef::Resource::Package#options.
         wheel_version = options[:wheel_version]
         return unless wheel_version
-        Chef::Log.debug("[#{new_resource}] Installing setuptools #{wheel_version == true ? 'latest' : wheel_version}")
+        Chef::Log.debug("[#{new_resource}] Installing wheel #{wheel_version == true ? 'latest' : wheel_version}")
         # Install wheel via pip.
         python_package 'wheel' do
           parent_python new_resource
