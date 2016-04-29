@@ -32,6 +32,12 @@ pip_requirements '/opt/myapp/requirements.txt'
 This cookbook can install at least Python 2.7, Python 3, and PyPy on all
 supported platforms (Debian, Ubuntu, RHEL, CentOS, Fedora).
 
+### Windows Support
+
+The latest version of `poise-python` includes basic support for managing Python
+on Windows. This currently doesn't support Python 3.5, but everything should be
+working. Consider this support tested but experimental at this time.
+
 ## Requirements
 
 Chef 12.1 or newer is required.

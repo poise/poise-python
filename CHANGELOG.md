@@ -1,5 +1,12 @@
 # Poise-Python Changelog
 
+## v1.3.0
+
+* Don't re-bootstrap very old pip if that is the configured version.
+* Support for bootstrapping with a specific version of pip.
+* [#40](https://github.com/poise/poise-python/pulls/40) Support for Python 3 system packages on Amazon Linux.
+* Experimental Windows support.
+
 ## v1.2.1
 
 * Compatibility with Pip 8.0.
