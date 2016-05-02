@@ -33,6 +33,7 @@ module PoisePython
           '~> 6.0' => %w{python3.1 python2.6 python2.5},
         },
         ubuntu: {
+          '16.04' => %w{python3.5 python2.7},
           '14.04' => %w{python3.4 python2.7},
           '12.04' => %w{python3.2 python2.7},
           '10.04' => %w{python3.1 python2.6},
