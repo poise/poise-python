@@ -44,6 +44,10 @@ module PoisePython
         #   requirements file.
         #   @return [String]
         attribute(:path, kind_of: String, name_attribute: true)
+        # @!attribute options
+        #   Extra options to be passed to `pip`, e.g. "--index-url http://my-pip-mirror.local/"
+        #   @return [String]
+        attribute(:options, kind_of: String)
         # @!attribute group
         #   System group to install the package.
         #   @return [String, Integer, nil]
@@ -86,6 +90,9 @@ module PoisePython
         def install_requirements(upgrade: false)
           cmd = %w{-m pip.__main__ install}
           cmd << '--upgrade' if upgrade
+          if new_resource.options
+            cmd += new_resource.options.split(/\s+/)
+          end
           cmd << '--requirement'
           cmd << requirements_path
           output = python_shell_out!(cmd, user: new_resource.user, group: new_resource.group).stdout
