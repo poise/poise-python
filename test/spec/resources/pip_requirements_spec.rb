@@ -21,13 +21,14 @@ describe PoisePython::Resources::PipRequirements do
   let(:pip_output) { '' }
   let(:pip_user) { nil }
   let(:pip_group) { nil }
+  let(:pip_cwd) { '/test' }
   step_into(:pip_requirements)
   before do
     allow(File).to receive(:directory?).and_return(false)
     allow(File).to receive(:directory?).with('/test').and_return(true)
   end
   before do
-    expect_any_instance_of(PoisePython::Resources::PipRequirements::Provider).to receive(:python_shell_out!).with(pip_cmd, {user: pip_user, group: pip_group}).and_return(double(stdout: pip_output))
+    expect_any_instance_of(PoisePython::Resources::PipRequirements::Provider).to receive(:python_shell_out!).with(pip_cmd, {user: pip_user, group: pip_group, cwd: pip_cwd}).and_return(double(stdout: pip_output))
   end
 
   context 'with a directory' do
@@ -88,4 +89,15 @@ describe PoisePython::Resources::PipRequirements do
 
     it { is_expected.to install_pip_requirements('/test').with(updated?: true) }
   end # /context with output
+
+  context 'with a cwd' do
+    let(:pip_cwd) { '/other' }
+    recipe do
+      pip_requirements '/test' do
+        cwd '/other'
+      end
+    end
+
+    it { is_expected.to install_pip_requirements('/test') }
+  end # /context with a cwd
 end

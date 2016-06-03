@@ -44,6 +44,11 @@ module PoisePython
         #   requirements file.
         #   @return [String]
         attribute(:path, kind_of: String, name_attribute: true)
+        # @!attribute cwd
+        #   Directory to run pip from. Defaults to the folder containing the
+        #   requirements.txt.
+        #   @return [String]
+        attribute(:cwd, kind_of: String, default: lazy { default_cwd })
         # @!attribute group
         #   System group to install the package.
         #   @return [String, Integer, nil]
@@ -52,6 +57,19 @@ module PoisePython
         #   System user to install the package.
         #   @return [String, Integer, nil]
         attribute(:user, kind_of: [String, Integer, NilClass])
+
+        private
+
+        # Default value for the {#cwd} property.
+        #
+        # @return [String]
+        def default_cwd
+          if ::File.directory?(path)
+            path
+          else
+            ::File.dirname(path)
+          end
+        end
       end
 
       # The default provider for `pip_requirements`.
@@ -88,7 +106,7 @@ module PoisePython
           cmd << '--upgrade' if upgrade
           cmd << '--requirement'
           cmd << requirements_path
-          output = python_shell_out!(cmd, user: new_resource.user, group: new_resource.group).stdout
+          output = python_shell_out!(cmd, user: new_resource.user, group: new_resource.group, cwd: new_resource.cwd).stdout
           if output.include?('Successfully installed')
             new_resource.updated_by_last_action(true)
           end
