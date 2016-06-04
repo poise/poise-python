@@ -18,6 +18,35 @@ require 'spec_helper'
 
 describe PoisePython::Resources::PythonPackage do
   describe PoisePython::Resources::PythonPackage::Resource do
+    describe '#response_file' do
+      recipe do
+        python_package 'foo' do
+          response_file 'bar'
+        end
+      end
+
+      it { expect { subject }.to raise_error NoMethodError }
+    end # /describe #response_file
+
+    describe '#response_file_variables' do
+      recipe do
+        python_package 'foo' do
+          response_file_variables 'bar'
+        end
+      end
+
+      it { expect { subject }.to raise_error NoMethodError }
+    end # /describe #response_file_variables
+
+    describe '#source' do
+      recipe do
+        python_package 'foo' do
+          source 'bar'
+        end
+      end
+
+      it { expect { subject }.to raise_error NoMethodError }
+    end # /describe #source
   end # /describe PoisePython::Resources::PythonPackage::Resource
 
   describe PoisePython::Resources::PythonPackage::Provider do
