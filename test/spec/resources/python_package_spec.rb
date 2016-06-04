@@ -96,6 +96,30 @@ describe PoisePython::Resources::PythonPackage do
         its(:version) { is_expected.to be nil }
         it { expect(candidate_version).to eq '1.0.0' }
       end # /context with a package with extras
+
+      context 'with options' do
+        let(:package_name) { 'foo' }
+        before do
+          test_resource.options('--index-url=http://example')
+          stub_cmd("-m pip.__main__ list --index-url=http://example  ", stdout: '')
+          stub_cmd("-  --index-url=http://example  foo", input: kind_of(String), stdout: '{"foo":"1.0.0"}')
+        end
+
+        its(:version) { is_expected.to be nil }
+        it { expect(candidate_version).to eq '1.0.0' }
+      end # /context with options
+
+      context 'with list options' do
+        let(:package_name) { 'foo' }
+        before do
+          test_resource.list_options('--index-url=http://example')
+          stub_cmd("-m pip.__main__ list  --index-url=http://example ", stdout: '')
+          stub_cmd("-   --index-url=http://example foo", input: kind_of(String), stdout: '{"foo":"1.0.0"}')
+        end
+
+        its(:version) { is_expected.to be nil }
+        it { expect(candidate_version).to eq '1.0.0' }
+      end # /context with list options
     end # /describe #load_current_resource
 
     describe 'actions' do
@@ -142,10 +166,20 @@ describe PoisePython::Resources::PythonPackage do
           let(:candidate_version) { '1.0.0' }
           before { test_resource.options('--editable') }
           it do
-            stub_cmd('-m pip.__main__ install --editable foo\\=\\=1.0.0')
+            stub_cmd('-m pip.__main__ install --editable  foo\\=\\=1.0.0')
             subject
           end
         end # /context with options
+
+        context 'with install options' do
+          let(:package_name) { 'foo' }
+          let(:candidate_version) { '1.0.0' }
+          before { test_resource.install_options('--editable') }
+          it do
+            stub_cmd('-m pip.__main__ install  --editable foo\\=\\=1.0.0')
+            subject
+          end
+        end # /context with install options
 
         context 'with a package with extras' do
           let(:package_name) { 'foo[bar]' }

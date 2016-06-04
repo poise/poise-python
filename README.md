@@ -224,6 +224,9 @@ The `:purge` and `:reconfigure` actions are not supported.
 * `user` – System user to install the package.
 * `virtualenv` – Name of the `python_virtualenv` resource to use. This is
   mutually exclusive with the `python` property.
+* `options` – Options to pass to `pip`.
+* `install_options` – Options to pass to `pip install` (and similar commands).
+* `list_options` – Options to pass to `pip list` (and similar commands).
 
 For other properties see the [Chef documentation](https://docs.chef.io/resource_package.html#attributes).
 The `response_file`, `response_file_variables`, and `source` properties are not
