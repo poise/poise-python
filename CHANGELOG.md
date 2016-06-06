@@ -1,5 +1,11 @@
 # Poise-Python Changelog
 
+## v1.4.0
+
+* Add system package names for Ubuntu 16.04.
+* Add `options` and `cwd` properties to `pip_requirements` resource.
+* Add `install_options` and `list_options` to `python_package` resource.
+
 ## v1.3.0
 
 * Don't re-bootstrap very old pip if that is the configured version.
