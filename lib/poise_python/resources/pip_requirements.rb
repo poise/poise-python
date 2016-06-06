@@ -14,6 +14,8 @@
 # limitations under the License.
 #
 
+require 'shellwords'
+
 require 'chef/provider'
 require 'chef/resource'
 require 'poise'
@@ -53,6 +55,10 @@ module PoisePython
         #   System group to install the package.
         #   @return [String, Integer, nil]
         attribute(:group, kind_of: [String, Integer, NilClass])
+        # @!attribute options
+        #   Options string to be used with `pip install`.
+        #   @return [String, nil, false]
+        attribute(:options, kind_of: [String, NilClass, FalseClass])
         # @!attribute user
         #   System user to install the package.
         #   @return [String, Integer, nil]
@@ -102,10 +108,19 @@ module PoisePython
         # @param upgrade [Boolean] If we should use the --upgrade flag.
         # @return [void]
         def install_requirements(upgrade: false)
-          cmd = %w{-m pip.__main__ install}
-          cmd << '--upgrade' if upgrade
-          cmd << '--requirement'
-          cmd << requirements_path
+          if new_resource.options
+            # Use a string because we have some options.
+            cmd = '-m pip.__main__ install'
+            cmd << ' --upgrade' if upgrade
+            cmd << " #{new_resource.options}"
+            cmd << " --requirement #{Shellwords.escape(requirements_path)}"
+          else
+            # No options, use an array to be slightly faster.
+            cmd = %w{-m pip.__main__ install}
+            cmd << '--upgrade' if upgrade
+            cmd << '--requirement'
+            cmd << requirements_path
+          end
           output = python_shell_out!(cmd, user: new_resource.user, group: new_resource.group, cwd: new_resource.cwd).stdout
           if output.include?('Successfully installed')
             new_resource.updated_by_last_action(true)

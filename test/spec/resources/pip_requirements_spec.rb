@@ -100,4 +100,15 @@ describe PoisePython::Resources::PipRequirements do
 
     it { is_expected.to install_pip_requirements('/test') }
   end # /context with a cwd
+
+  context 'with options' do
+    let(:pip_cmd) { '-m pip.__main__ install --index-url=http://example --requirement /test/requirements.txt' }
+    recipe do
+      pip_requirements '/test' do
+        options '--index-url=http://example'
+      end
+    end
+
+    it { is_expected.to install_pip_requirements('/test') }
+  end # /context with options
 end
