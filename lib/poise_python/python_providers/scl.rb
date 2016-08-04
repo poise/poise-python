@@ -26,6 +26,12 @@ module PoisePython
     class Scl < Base
       include PoiseLanguages::Scl::Mixin
       provides(:scl)
+      scl_package('3.5.1', 'rh-python35', 'rh-python35-python-devel', {
+        ['redhat', 'centos'] => {
+          '~> 7.0' => 'https://www.softwarecollections.org/en/scls/rhscl/rh-python35/epel-7-x86_64/download/rhscl-rh-python35-epel-7-x86_64.noarch.rpm',
+          '~> 6.0' => 'https://www.softwarecollections.org/en/scls/rhscl/rh-python35/epel-6-x86_64/download/rhscl-rh-python35-epel-6-x86_64.noarch.rpm',
+        },
+      })
       scl_package('3.4.2', 'rh-python34', 'rh-python34-python-devel', {
         ['redhat', 'centos'] => {
           '~> 7.0' => 'https://www.softwarecollections.org/en/scls/rhscl/rh-python34/epel-7-x86_64/download/rhscl-rh-python34-epel-7-x86_64.noarch.rpm',
