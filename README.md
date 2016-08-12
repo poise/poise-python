@@ -77,9 +77,11 @@ python_runtime '2'
 
 * `version` – Version of Python to install. If a partial version is given, use the
   latest available version matching that prefix. *(name property)*
+* `get_pip_url` – URL to download the `get-pip.py` bootstrap script from.
+  *(default: https://bootstrap.pypa.io/get-pip.py)*
 * `pip_version` – Version of pip to install. If set to `true`, use the latest.
-  If set to `false`, do not install pip. Can also be set to a URL to a copy of
-  the `get-pip.py` script. *(default: true)*
+  If set to `false`, do not install pip. For backward compatibility, can also be
+  set to a URL instead of `get_pip_url`. *(default: true)*
 * `setuptools_version` – Version of Setuptools to install. If set to `true`, use
   the latest. If set to `false`, do not install Setuptools. *(default: true)*
 * `virtualenv_version` – Version of virtualenv to install. If set to `true`,

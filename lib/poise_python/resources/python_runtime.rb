@@ -46,22 +46,20 @@ module PoisePython
         #   @example Install Python 2.7
         #     python_runtime '2.7'
         attribute(:version, kind_of: String, name_attribute: true)
+        # @!attribute get_pip_url
+        #   URL to download the get-pip.py script from. If not sure, the default
+        #   of https://bootstrap.pypa.io/get-pip.py is used. If you want to skip
+        #   the pip installer entirely, set {#pip_version} to `false`.
+        #   @return [String]
+        attribute(:get_pip_url, kind_of: String, default: 'https://bootstrap.pypa.io/get-pip.py')
         # @!attribute pip_version
         #   Version of pip to install. If set to `true`, the latest available
         #   pip will be used. If set to `false`, pip will not be installed. If
-        #   set to a URL, that will be used as the URL to get-pip.py. If a
-        #   non-URL version is given, the get-pip.py installer will be
-        #   downloaded from the internet.
-        #   @note Due to https://github.com/pypa/pip/issues/1087, the latest
-        #     version of pip will always be installed initially. It will then
-        #     downgrade to the requested version if needed.
+        #   set to a URL, that will be used as the URL to get-pip.py instead of
+        #   {#get_pip_url}.
         #   @note Disabling the pip install may result in other resources being
         #     non-functional.
         #   @return [String, Boolean]
-        #   @example Install from a locally-hosted copy of get-pip.py
-        #     python_runtime '2' do
-        #       pip_version 'http://myserver/get-pip.py'
-        #     end
         attribute(:pip_version, kind_of: [String, TrueClass, FalseClass], default: true)
         # @!attribute setuptools_version
         #   Version of Setuptools to install. It set to `true`, the latest

@@ -20,7 +20,9 @@ describe PoisePython::Resources::PythonRuntimePip do
   step_into(:python_runtime_pip)
   recipe do
     python_runtime 'test'
-    python_runtime_pip 'test'
+    python_runtime_pip 'test' do
+      get_pip_url 'http://example.com/'
+    end
   end
   before do
     provider = PoisePython::Resources::PythonRuntimePip::Provider

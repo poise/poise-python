@@ -26,8 +26,6 @@ module PoisePython
     # @since 1.0.0
     # @api private
     module PythonRuntimePip
-      # URL for the default get-pip.py script.
-      DEFAULT_GET_PIP_URL = 'https://bootstrap.pypa.io/get-pip.py'
       # Earliest version of pip we will try upgrading in-place.
       PIP_INPLACE_VERSION = Gem::Version.create('7.0.0')
 
@@ -49,9 +47,9 @@ module PoisePython
         #   @return [String]
         attribute(:version, kind_of: String)
         # @!attribute get_pip_url
-        #   URL to the get-pip.py script. Defaults to pulling it from pypa.io.
+        #   URL to the get-pip.py script.
         #   @return [String]
-        attribute(:get_pip_url, kind_of: String, default: DEFAULT_GET_PIP_URL)
+        attribute(:get_pip_url, kind_of: String, required: true)
       end
 
       # The default provider for `python_runtime_pip`.

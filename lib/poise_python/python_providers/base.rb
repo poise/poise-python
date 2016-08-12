@@ -28,6 +28,7 @@ module PoisePython
       # @api private
       def self.default_inversion_options(node, new_resource)
         super.merge({
+          get_pip_url: new_resource.get_pip_url,
           pip_version: new_resource.pip_version,
           setuptools_version: new_resource.setuptools_version,
           version: new_resource.version,
@@ -103,13 +104,14 @@ module PoisePython
       def install_pip
         pip_version_or_url = options[:pip_version]
         return unless pip_version_or_url
-        # If there is a : in the version, use it as a URL.
+        # If there is a : in the version, use it as a URL and ignore the actual
+        # URL option.
         if pip_version_or_url.is_a?(String) && pip_version_or_url.include?(':')
           pip_version = nil
           pip_url = pip_version_or_url
         else
           pip_version = pip_version_or_url
-          pip_url = nil
+          pip_url = options[:get_pip_url]
         end
         Chef::Log.debug("[#{new_resource}] Installing pip #{pip_version || 'latest'}")
         # Install or bootstrap pip.
@@ -117,7 +119,7 @@ module PoisePython
           parent new_resource
           # If the version is `true`, don't pass it at all.
           version pip_version if pip_version.is_a?(String)
-          get_pip_url pip_url if pip_url
+          get_pip_url pip_url
         end
       end
 
