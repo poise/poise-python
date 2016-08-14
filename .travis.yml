@@ -19,4 +19,9 @@ gemfile:
 - test/gemfiles/chef-12.4.gemfile
 - test/gemfiles/chef-12.5.gemfile
 - test/gemfiles/chef-12.6.gemfile
+- test/gemfiles/chef-12.7.gemfile
+- test/gemfiles/chef-12.8.gemfile
+- test/gemfiles/chef-12.9.gemfile
+- test/gemfiles/chef-12.10.gemfile
+- test/gemfiles/chef-12.11.gemfile
 - test/gemfiles/master.gemfile
