@@ -59,6 +59,12 @@ describe PoisePython::PythonProviders::Scl do
     it_behaves_like 'scl provider', 'python33'
   end # /context with version "3.3"
 
+  context 'with version "" on CentOS 6' do
+    let(:chefspec_options) { {platform: 'centos', version: '6.0'} }
+    let(:python_version) { '' }
+    it_behaves_like 'scl provider', 'rh-python34'
+  end # /context with version "" on CentOS 6
+
   context 'action :uninstall' do
     recipe do
       python_runtime 'test' do
