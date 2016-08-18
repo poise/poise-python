@@ -18,6 +18,4 @@ eval_gemfile File.expand_path('../../../Gemfile', __FILE__)
 
 gem 'chef', '~> 12.7.2'
 
-# Disable "Thread.exclusive is deprecated, use Mutex" warnings because they
-# overflow the Travis logs.
-$VERBOSE = nil
+gem 'rack', '< 2'
