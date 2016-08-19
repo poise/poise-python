@@ -10,6 +10,8 @@ script:
   - ./bin/rake travis
 matrix:
   include:
+    - rvm: 2.1.9
+      gemfile: test/gemfiles/chef-12.gemfile
     - rvm: 2.1.4
       gemfile: test/gemfiles/chef-12.1.gemfile
     - rvm: 2.1.4
