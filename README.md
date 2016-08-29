@@ -27,6 +27,30 @@ end
 pip_requirements '/opt/myapp/requirements.txt'
 ```
 
+## Installing a Package From a URI
+
+While using `python_package 'git+https://github.com/example/mypackage.git'` will
+sometimes work, this approach is not recommended. Unfortunately pip's support
+for installing directly from URI sources is limited and cannot support the API
+used for the `python_package` resource. You can run the install either directly
+from the URI or through an intermediary `git` resource:
+
+```ruby
+# Will re-install on every converge unless you add a not_if/only_if.
+python_execute '-m pip install git+https://github.com/example/mypackage.git'
+
+# Will only re-install when the git repository updates.
+python_execute 'install mypackage' do
+  action :nothing
+  command '-m pip install .'
+  cwd '/opt/mypackage'
+end
+git '/opt/mypackage' do
+  repository 'https://github.com/example/mypackage.git'
+  notifies :run, 'python_execute[install mypackage]', :immediately
+end
+```
+
 ## Supported Python Versions
 
 This cookbook can install at least Python 2.7, Python 3, and PyPy on all
