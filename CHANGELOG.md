@@ -1,5 +1,9 @@
 # Poise-Python Changelog
 
+## v1.5.0
+
+* Support new SCL structure and packages.
+
 ## v1.4.0
 
 * Add system package names for Ubuntu 16.04.
