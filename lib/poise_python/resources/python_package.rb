@@ -188,13 +188,13 @@ EOH
             @candidate_version = []
             versions = []
             [resource.package_name].flatten.each do |name|
-              ver = version_data[parse_package_name(name).downcase]
+              ver = version_data[parse_package_name(name)]
               versions << ver[:current]
               @candidate_version << ver[:candidate]
             end
             resource.version(versions)
           else
-            ver = version_data[parse_package_name(resource.package_name).downcase]
+            ver = version_data[parse_package_name(resource.package_name)]
             resource.version(ver[:current])
             @candidate_version = ver[:candidate]
           end
@@ -316,7 +316,7 @@ EOH
             # Example of a line:
             # boto (2.25.0)
             if md = line.match(/^(\S+)\s+\(([^\s,]+).*\)$/i)
-              memo[md[1].downcase] = md[2]
+              memo[parse_package_name(md[1])] = md[2]
             else
               Chef::Log.debug("[#{new_resource}] Unparsable line in pip list: #{line}")
             end
@@ -340,7 +340,7 @@ EOH
             $1
           else
             raw_name
-          end
+          end.downcase.gsub(/_/, '-')
         end
 
       end

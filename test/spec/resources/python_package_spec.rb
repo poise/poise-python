@@ -97,6 +97,17 @@ describe PoisePython::Resources::PythonPackage do
         it { expect(candidate_version).to eq '1.0.0' }
       end # /context with a package with extras
 
+      context 'with a package with underscores' do
+        let(:package_name) { 'cx_foo' }
+        before do
+          stub_cmd(%w{-m pip.__main__ list}, stdout: '')
+          stub_cmd(%w{- cx-foo}, input: kind_of(String), stdout: '{"cx-foo":"1.0.0"}')
+        end
+
+        its(:version) { is_expected.to be nil }
+        it { expect(candidate_version).to eq '1.0.0' }
+      end # /context with a package with underscores
+
       context 'with options' do
         let(:package_name) { 'foo' }
         before do
@@ -189,6 +200,15 @@ describe PoisePython::Resources::PythonPackage do
             subject
           end
         end # /context with a package with extras
+
+        context 'with a package with underscores' do
+          let(:package_name) { 'cx_foo' }
+          let(:candidate_version) { '1.0.0' }
+          it do
+            stub_cmd(%w{-m pip.__main__ install cx_foo==1.0.0})
+            subject
+          end
+        end # /context with a package with underscores
       end # /describe action :install
 
       describe 'action :upgrade' do
@@ -250,8 +270,9 @@ eventlet (0.12.1)
 Fabric (1.9.1)
 fabric-rundeck (1.2, /Users/coderanger/src/bal/fabric-rundeck)
 flake8 (2.1.0.dev0)
+cx-Freeze (4.3.4)
 EOH
-        it { is_expected.to eq({'eventlet' => '0.12.1', 'fabric' => '1.9.1', 'fabric-rundeck' => '1.2', 'flake8' => '2.1.0.dev0'}) }
+        it { is_expected.to eq({'eventlet' => '0.12.1', 'fabric' => '1.9.1', 'fabric-rundeck' => '1.2', 'flake8' => '2.1.0.dev0', 'cx-freeze' => '4.3.4'}) }
       end # /context with standard content
 
       context 'with malformed content' do
@@ -260,8 +281,9 @@ eventlet (0.12.1)
 Fabric (1.9.1)
 fabric-rundeck (1.2, /Users/coderanger/src/bal/fabric-rundeck)
 flake 8 (2.1.0.dev0)
+cx_Freeze (4.3.4)
 EOH
-        it { is_expected.to eq({'eventlet' => '0.12.1', 'fabric' => '1.9.1', 'fabric-rundeck' => '1.2'}) }
+        it { is_expected.to eq({'eventlet' => '0.12.1', 'fabric' => '1.9.1', 'fabric-rundeck' => '1.2', 'cx-freeze' => '4.3.4'}) }
       end # /context with malformed content
     end # /describe #parse_pip_list
   end # /describe PoisePython::Resources::PythonPackage::Provider
