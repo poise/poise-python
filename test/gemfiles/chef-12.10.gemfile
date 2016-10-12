@@ -18,3 +18,4 @@ eval_gemfile File.expand_path('../../../Gemfile', __FILE__)
 
 gem 'chef', '~> 12.10.24'
 gem 'rack', '< 2'
+gem 'foodcritic', '< 8'
