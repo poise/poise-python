@@ -30,9 +30,9 @@ describe PoisePython::PythonProviders::PortablePyPy3 do
     end
   end
 
-  shared_examples_for 'portablepypy3 provider' do |base|
+  shared_examples_for 'portablepypy3 provider' do |base, url=nil|
     it { expect(python_runtime.provider_for_action(:install)).to be_a described_class }
-    it { is_expected.to install_poise_languages_static(File.join('', 'opt', base)).with(source: "https://bitbucket.org/squeaky/portable-pypy/downloads/#{base}-linux_x86_64-portable.tar.bz2") }
+    it { is_expected.to install_poise_languages_static(File.join('', 'opt', base)).with(source: url || "https://bitbucket.org/squeaky/portable-pypy/downloads/#{base}-linux_x86_64-portable.tar.bz2") }
     it { expect(python_runtime.python_binary).to eq File.join('', 'opt', base, 'bin', 'pypy') }
   end
 
@@ -45,6 +45,12 @@ describe PoisePython::PythonProviders::PortablePyPy3 do
     let(:python_version) { 'pypy3-2.3.1' }
     it_behaves_like 'portablepypy3 provider', 'pypy3-2.3.1'
   end # /context with version pypy3-2.3.1
+
+
+  context 'with version pypy3-5.5' do
+    let(:python_version) { 'pypy3-5.5' }
+    it_behaves_like 'portablepypy3 provider', 'pypy3-5.5-alpha-20161013', 'https://bitbucket.org/squeaky/portable-pypy/downloads/pypy3.3-5.5-alpha-20161013-linux_x86_64-portable.tar.bz2'
+  end # /context with version pypy3-5.5
 
   context 'action :uninstall' do
     recipe do

@@ -26,10 +26,21 @@ module PoisePython
       provides(:portable_pypy3)
       include PoiseLanguages::Static(
         name: 'pypy3',
-        versions: %w{2.4 2.3.1},
+        # Don't put 5.x-alpha first so it isn't used for prefix matches on ''.
+        versions: %w{2.4 5.5-alpha-20161013 5.2-alpha-20160602 2.3.1},
         machines: %w{linux-i686 linux-x86_64},
         url: 'https://bitbucket.org/squeaky/portable-pypy/downloads/pypy3-%{version}-%{kernel}_%{machine}-portable.tar.bz2'
       )
+
+      def self.default_inversion_options(node, resource)
+        super.tap do |options|
+          if resource.version && resource.version =~ /^(pypy3-)?5/
+            # We need a different default base URL for pypy3.3
+            # This is the same as before but `/pypy3.3` as the prefix on the filename.
+            options['url'] = 'https://bitbucket.org/squeaky/portable-pypy/downloads/pypy3.3-%{version}-%{kernel}_%{machine}-portable.tar.bz2'
+          end
+        end
+      end
 
       def python_binary
         ::File.join(static_folder, 'bin', 'pypy')
