@@ -125,7 +125,8 @@ module PoisePython
             end
           else
             converge_by("Creating venv at #{new_resource.path}") do
-              create_virtualenv(%w{venv --without-pip})
+              use_withoutpip = cmd.stdout.include?('--without-pip')
+              create_virtualenv(use_withoutpip ? %w{venv --without-pip} : %w{venv})
             end
           end
         end

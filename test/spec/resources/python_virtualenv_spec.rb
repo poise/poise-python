@@ -20,10 +20,11 @@ describe PoisePython::Resources::PythonVirtualenv do
   step_into(:python_virtualenv)
   let(:expect_cmd) { nil }
   let(:has_venv) { false }
+  let(:venv_help_output) { '  --without-pip         Skips installing or upgrading pip in the virtual' }
   let(:expect_user) { nil }
   before do
     if expect_cmd
-      expect_any_instance_of(PoisePython::Resources::PythonVirtualenv::Provider).to receive(:python_shell_out).with(%w{-m venv -h}).and_return(double(error?: !has_venv))
+      expect_any_instance_of(PoisePython::Resources::PythonVirtualenv::Provider).to receive(:python_shell_out).with(%w{-m venv -h}).and_return(double(error?: !has_venv, stdout: venv_help_output))
       expect_any_instance_of(PoisePython::Resources::PythonVirtualenv::Provider).to receive(:python_shell_out!).with(expect_cmd, environment: be_a(Hash), user: expect_user, group: expect_user)
     end
   end
@@ -48,6 +49,17 @@ describe PoisePython::Resources::PythonVirtualenv do
 
     it { is_expected.to create_python_virtualenv('/test') }
   end # /context with venv
+
+  context 'with venv on python 3.3' do
+    let(:has_venv) { true }
+    let(:venv_help_output) { '' }
+    let(:expect_cmd) { %w{-m venv /test} }
+    recipe do
+      python_virtualenv '/test'
+    end
+
+    it { is_expected.to create_python_virtualenv('/test') }
+  end # /context with venv on python 3.3
 
   context 'with system_site_packages' do
     let(:expect_cmd) { %w{-m virtualenv --system-site-packages /test} }
