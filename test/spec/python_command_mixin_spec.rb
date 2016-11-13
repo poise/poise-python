@@ -29,52 +29,52 @@ describe PoisePython::PythonCommandMixin do
       context 'with an implicit parent' do
         recipe do
           python_runtime 'test' do
-            provider :system
+            provider :dummy
           end
           poise_test 'test'
         end
 
-        it { is_expected.to run_poise_test('test').with(parent_python: python, python: '/usr/bin/python') }
+        it { is_expected.to run_poise_test('test').with(parent_python: python, python: '/python') }
       end # /context with an implicit parent
 
       context 'with a parent resource' do
         recipe do
           r = python_runtime 'test' do
-            provider :system
+            provider :dummy
           end
           poise_test 'test' do
             python r
           end
         end
 
-        it { is_expected.to run_poise_test('test').with(parent_python: python, python: '/usr/bin/python') }
+        it { is_expected.to run_poise_test('test').with(parent_python: python, python: '/python') }
       end # /context with a parent resource
 
       context 'with a parent resource name' do
         recipe do
           python_runtime 'test' do
-            provider :system
+            provider :dummy
           end
           poise_test 'test' do
             python 'test'
           end
         end
 
-        it { is_expected.to run_poise_test('test').with(parent_python: python, python: '/usr/bin/python') }
+        it { is_expected.to run_poise_test('test').with(parent_python: python, python: '/python') }
       end # /context with a parent resource name
 
       context 'with a parent resource name that looks like a path' do
         let(:python) { chef_run.python_runtime('/usr/bin/other') }
         recipe do
           python_runtime '/usr/bin/other' do
-            provider :system
+            provider :dummy
           end
           poise_test 'test' do
             python '/usr/bin/other'
           end
         end
 
-        it { is_expected.to run_poise_test('test').with(parent_python: python, python: '/usr/bin/python') }
+        it { is_expected.to run_poise_test('test').with(parent_python: python, python: '/python') }
       end # /context with a parent resource name that looks like a path
 
       context 'with a path' do
@@ -90,7 +90,7 @@ describe PoisePython::PythonCommandMixin do
       context 'with a path and an implicit parent' do
         recipe do
           python_runtime 'test' do
-            provider :system
+            provider :dummy
           end
           poise_test 'test' do
             python '/usr/bin/other'
