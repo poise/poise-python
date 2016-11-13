@@ -38,7 +38,7 @@ describe PoisePython::PythonProviders::PortablePyPy do
 
   context 'with version pypy' do
     let(:python_version) { 'pypy' }
-    it_behaves_like 'portablepypy provider', 'pypy-4.0.1'
+    it_behaves_like 'portablepypy provider', 'pypy-5.6'
   end # /context with version pypy
 
   context 'with version pypy-2.4' do
@@ -54,6 +54,6 @@ describe PoisePython::PythonProviders::PortablePyPy do
       end
     end
 
-    it { is_expected.to uninstall_poise_languages_static('/opt/pypy-4.0.1') }
+    it { is_expected.to uninstall_poise_languages_static('/opt/pypy-5.6') }
   end # /context action :uninstall
 end
