@@ -43,4 +43,8 @@ matrix:
     - rvm: 2.3.1
       gemfile: test/gemfiles/chef-12.15.gemfile
     - rvm: 2.3.1
+      gemfile: test/gemfiles/chef-12.16.gemfile
+    - rvm: 2.3.1
+      gemfile: test/gemfiles/chef-12.17.gemfile
+    - rvm: 2.3.1
       gemfile: test/gemfiles/master.gemfile
