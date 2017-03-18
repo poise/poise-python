@@ -99,7 +99,7 @@ EOH
         # @!attribute group
         #   System group to install the package.
         #   @return [String, Integer, nil]
-        attribute(:group, kind_of: [String, Integer, NilClass])
+        attribute(:group, kind_of: [String, Integer, NilClass], default: lazy { default_group })
         # @!attribute install_options
         #   Options string to be used with `pip install`.
         #   @return [String, nil, false]
@@ -111,7 +111,7 @@ EOH
         # @!attribute user
         #   System user to install the package.
         #   @return [String, Integer, nil]
-        attribute(:user, kind_of: [String, Integer, NilClass])
+        attribute(:user, kind_of: [String, Integer, NilClass], default: lazy { default_user })
 
         def initialize(*args)
           super
@@ -140,6 +140,35 @@ EOH
         # (see #response_file)
         def source(arg=nil)
           raise NoMethodError if arg
+        end
+
+        private
+
+        # Find a default group, if any, from the parent Python.
+        #
+        # @api private
+        # @return [String, Integer, nil]
+        def default_group
+          # Use an explicit is_a? hack because python_runtime is a container so
+          # it gets the whole DSL and this will always respond_to?(:group).
+          if parent_python && parent_python.is_a?(PoisePython::Resources::PythonVirtualenv::Resource)
+            parent_python.group
+          else
+            nil
+          end
+        end
+
+        # Find a default user, if any, from the parent Python.
+        #
+        # @api private
+        # @return [String, Integer, nil]
+        def default_user
+          # See default_group for explanation of is_a? hack grossness.
+          if parent_python && parent_python.is_a?(PoisePython::Resources::PythonVirtualenv::Resource)
+            parent_python.user
+          else
+            nil
+          end
         end
       end
 
