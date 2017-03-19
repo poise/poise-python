@@ -96,7 +96,6 @@ RSpec.shared_examples 'a python_runtime_test' do |python_name, version=nil|
 
   unless os[:family] == 'windows'
     describe 'user install' do
-      assert_file('import_attrs')
       assert_file('import_docopt')
     end
   end

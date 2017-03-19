@@ -170,15 +170,10 @@ EOH
                 python new_resource.name
                 user test_user
               end
-              python_package 'attrs' do
-                user test_user
-                virtualenv test_venv
-              end
               python_package 'docopt' do
                 user test_user
                 virtualenv test_venv
               end
-              test_import('attr', 'attrs', python: nil, virtualenv: test_venv, user: test_user)
               test_import('docopt', python: nil, virtualenv: test_venv, user: test_user)
             end
           end
