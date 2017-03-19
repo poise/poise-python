@@ -174,7 +174,12 @@ EOH
                 user test_user
                 virtualenv test_venv
               end
-              test_import('attrs', 'attr', python: nil, virtualenv: test_venv, user: test_user)
+              python_package 'docopt' do
+                user test_user
+                virtualenv test_venv
+              end
+              test_import('attr', 'attrs', python: nil, virtualenv: test_venv, user: test_user)
+              test_import('docopt', python: nil, virtualenv: test_venv, user: test_user)
             end
           end
         end
