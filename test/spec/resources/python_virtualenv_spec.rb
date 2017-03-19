@@ -38,6 +38,10 @@ describe PoisePython::Resources::PythonVirtualenv do
     it { is_expected.to create_python_virtualenv('/test') }
     it { expect(chef_run.python_virtualenv('/test').python_binary).to eq '/test/bin/python' }
     it { expect(chef_run.python_virtualenv('/test').python_environment).to eq({}) }
+    it { is_expected.to install_python_package('wheel').with(parent_python: chef_run.python_virtualenv('/test')) }
+    it { is_expected.to install_python_package('setuptools').with(parent_python: chef_run.python_virtualenv('/test')) }
+    it { is_expected.to_not install_python_package('virtualenv') }
+    it { is_expected.to install_python_runtime_pip('/test').with(parent: chef_run.python_virtualenv('/test')) }
   end # /context without venv
 
   context 'with venv' do
@@ -83,6 +87,8 @@ describe PoisePython::Resources::PythonVirtualenv do
     end
 
     it { is_expected.to create_python_virtualenv('/test') }
+    it { is_expected.to install_python_package('wheel').with(group: 'me', user: 'me') }
+    it { is_expected.to install_python_package('setuptools').with(group: 'me', user: 'me') }
   end # /context with a user and group
 
 
