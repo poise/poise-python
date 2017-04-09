@@ -53,6 +53,11 @@ describe PoisePython::Resources::PythonPackage do
     let(:test_resource) { nil }
     let(:test_provider) { described_class.new(test_resource, chef_run.run_context) }
     def stub_cmd(cmd, **options)
+      options = options.dup
+      array_13 = options.delete(:array_13)
+      if array_13 && Gem::Requirement.create('>= 13').satisfied_by?(Gem::Version.create(Chef::VERSION))
+        cmd = Shellwords.split(cmd)
+      end
       output_options = {error?: options.delete(:error?) || false, stdout: options.delete(:stdout) || '', stderr: options.delete(:stderr) || ''}
       expect(test_provider).to receive(:python_shell_out!).with(cmd, options).and_return(double("python #{cmd} return", **output_options))
     end
@@ -112,8 +117,8 @@ describe PoisePython::Resources::PythonPackage do
         let(:package_name) { 'foo' }
         before do
           test_resource.options('--index-url=http://example')
-          stub_cmd("-m pip.__main__ list --index-url=http://example  ", stdout: '')
-          stub_cmd("-  --index-url=http://example  foo", input: kind_of(String), stdout: '{"foo":"1.0.0"}')
+          stub_cmd("-m pip.__main__ list --index-url=http://example  ", stdout: '', array_13: true)
+          stub_cmd("-  --index-url=http://example  foo", input: kind_of(String), stdout: '{"foo":"1.0.0"}', array_13: true)
         end
 
         its(:version) { is_expected.to be nil }
@@ -131,6 +136,18 @@ describe PoisePython::Resources::PythonPackage do
         its(:version) { is_expected.to be nil }
         it { expect(candidate_version).to eq '1.0.0' }
       end # /context with list options
+
+      context 'with array list options' do
+        let(:package_name) { 'foo' }
+        before do
+          test_resource.list_options(%w{--index-url=http://example})
+          stub_cmd(%w{-m pip.__main__ list --index-url=http://example}, stdout: '')
+          stub_cmd(%w{-  --index-url=http://example foo}, input: kind_of(String), stdout: '{"foo":"1.0.0"}')
+        end
+
+        its(:version) { is_expected.to be nil }
+        it { expect(candidate_version).to eq '1.0.0' }
+      end # /context with array list options
     end # /describe #load_current_resource
 
     describe 'actions' do
@@ -177,7 +194,7 @@ describe PoisePython::Resources::PythonPackage do
           let(:candidate_version) { '1.0.0' }
           before { test_resource.options('--editable') }
           it do
-            stub_cmd('-m pip.__main__ install --editable  foo\\=\\=1.0.0')
+            stub_cmd('-m pip.__main__ install --editable  foo\\=\\=1.0.0', array_13: true)
             subject
           end
         end # /context with options
@@ -191,6 +208,16 @@ describe PoisePython::Resources::PythonPackage do
             subject
           end
         end # /context with install options
+
+        context 'with array install options' do
+          let(:package_name) { 'foo' }
+          let(:candidate_version) { '1.0.0' }
+          before { test_resource.install_options(%w{--editable}) }
+          it do
+            stub_cmd(%w{-m pip.__main__ install --editable foo==1.0.0})
+            subject
+          end
+        end # /context with array install options
 
         context 'with a package with extras' do
           let(:package_name) { 'foo[bar]' }
