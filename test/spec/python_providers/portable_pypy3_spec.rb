@@ -49,7 +49,12 @@ describe PoisePython::PythonProviders::PortablePyPy3 do
 
   context 'with version pypy3-5.5' do
     let(:python_version) { 'pypy3-5.5' }
-    it_behaves_like 'portablepypy3 provider', 'pypy3-5.5-alpha-20161013', 'https://bitbucket.org/squeaky/portable-pypy/downloads/pypy3.3-5.5-alpha-20161013-linux_x86_64-portable.tar.bz2'
+    it_behaves_like 'portablepypy3 provider', 'pypy3-5.5-alpha-20161014', 'https://bitbucket.org/squeaky/portable-pypy/downloads/pypy3.3-5.5-alpha-20161014-linux_x86_64-portable.tar.bz2'
+  end # /context with version pypy3-5.5
+
+  context 'with version pypy3-5.7' do
+    let(:python_version) { 'pypy3-5.7' }
+    it_behaves_like 'portablepypy3 provider', 'pypy3-5.7.1-beta', 'https://bitbucket.org/squeaky/portable-pypy/downloads/pypy3.5-5.7.1-beta-linux_x86_64-portable.tar.bz2'
   end # /context with version pypy3-5.5
 
   context 'action :uninstall' do
