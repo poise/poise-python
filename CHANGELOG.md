@@ -1,5 +1,12 @@
 # Poise-Python Changelog
 
+## v1.6.0
+
+* Improved handling for Python 3.3.
+* Updated PyPy release lists.
+* Fix file permissions for non-root-owned virtualenvs.
+* Support for Chef 13.
+
 ## v1.5.1
 
 * Fix handling of packages with underscores in the name.
