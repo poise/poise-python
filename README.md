@@ -373,6 +373,25 @@ python_runtime 'myapp' do
 end
 ```
 
+When using Software Collections, poise-python will handle the configuration of
+environment variables for you within a Chef run. However, outside of a Chef run,
+you must wrap your command with `scl enable` to ensure the environment is
+configured correctly. For example, in the case of the python package `awscli`,
+you must run as:
+
+```bash
+$ scl enable python27 "aws help"
+```
+
+Alternatively, you can use the `:system` provider to disable the use of Software
+Collections, keeping in mind that this may install an older version of python:
+
+```ruby
+python_runtime '2' do
+  provider :system
+end
+```
+
 ### `portable_pypy`
 
 The `portable_pypy` provider installs Python using the [Portable PyPy](https://github.com/squeaky-pl/portable-pypy)
@@ -418,9 +437,11 @@ to the `poise-python::default` recipe. The `python::pip` and `python::virtualenv
 recipes are no longer needed as installing those things is now part of the
 `python_runtime` resource. The `python::package` recipe corresponds with the
 `system` provider for the `python_runtime` resource, and can generally be
-replaced with `poise-python::default`. At this time there is no provider to
-install from source so there is no replacement for the `python::source` recipe,
-however this is planned for the future via a `python-build` provider.
+replaced with `poise-python::default`, less some new behavior which utilizes
+Software Collections by default on RHEL, CentOS, and Fedora. At this time there is
+no provider to install from source so there is no replacement for the
+`python::source` recipe, however this is planned for the future via a `python-build`
+provider.
 
 The `python_pip` resource can be replaced with `python_package`, though the
 `environment` property has been removed. The `python_virtualenv` resource can remain
