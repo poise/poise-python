@@ -1,5 +1,5 @@
 #
-# Copyright 2016-2017, Noah Kantrowitz
+# Copyright 2017, Noah Kantrowitz
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,7 +16,4 @@
 
 eval_gemfile File.expand_path('../../../Gemfile', __FILE__)
 
-gem 'chef', '~> 12.12.15'
-gem 'foodcritic', '< 8'
-gem 'fauxhai', '<= 3.9.0'
-gem 'chefspec', '< 6'
+gem 'chef', '~> 13.0'
