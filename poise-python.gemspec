@@ -26,7 +26,8 @@ Gem::Specification.new do |spec|
   spec.description = "A Chef cookbook for managing Python installations."
   spec.summary = spec.description
   spec.homepage = 'https://github.com/poise/poise-python'
-  spec.license = 'Apache 2.0'
+  spec.license = 'Apache-2.0'
+  spec.metadata['platforms'] = 'ubuntu debian redhat centos fedora amazon windows'
 
   spec.files = `git ls-files`.split($/)
   spec.executables = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
