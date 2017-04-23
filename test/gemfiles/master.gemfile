@@ -17,7 +17,10 @@
 eval_gemfile File.expand_path('../../../Gemfile', __FILE__)
 
 gem 'chef', github: 'chef/chef'
+gem 'chefspec', github: 'sethvargo/chefspec'
 gem 'halite', github: 'poise/halite'
+gem 'fauxhai', github: 'customink/fauxhai'
+gem 'foodcritic', github: 'foodcritic/foodcritic'
 gem 'ohai', github: 'chef/ohai'
 gem 'poise', github: 'poise/poise'
 gem 'poise-archive', github: 'poise/poise-archive'
