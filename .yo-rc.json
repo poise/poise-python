@@ -1,5 +1,7 @@
 {
   "generator-poise": {
-    "name": "poise-python"
+    "name": "poise-python",
+    "coobookName": "auto",
+    "created": true
   }
 }
