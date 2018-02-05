@@ -17,8 +17,10 @@
 eval_gemfile File.expand_path('../../../Gemfile', __FILE__)
 
 gem 'chef', '~> 12.1.2'
+gem 'byebug', '< 9.1.0'
 gem 'chefspec', '< 6'
 gem 'fauxhai', '<= 3.9.0'
 gem 'ffi-yajl', '< 2.3.1'
 gem 'foodcritic', '< 8'
+gem 'mixlib-shellout', '< 2.3.0'
 gem 'rack', '< 2'
