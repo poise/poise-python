@@ -113,6 +113,12 @@ EOH
         #   @return [String, Integer, nil]
         attribute(:user, kind_of: [String, Integer, NilClass], default: lazy { default_user })
 
+        # This should probably be in the base class but ¯\_(ツ)_/¯.
+        # @!attribute allow_downgrade
+        #   Allow downgrading the package.
+        #   @return [Boolean]
+        attribute(:allow_downgrade, kind_of: [TrueClass, FalseClass], default: false)
+
         def initialize(*args)
           super
           # For older Chef.
