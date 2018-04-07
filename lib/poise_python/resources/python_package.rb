@@ -32,20 +32,24 @@ module PoisePython
       # A Python snippet to check which versions of things pip would try to
       # install. Probably not 100% bulletproof.
       PIP_HACK_SCRIPT = <<-EOH
+from distutils.version import LooseVersion
 import json
-import re
 import sys
 
 import pip
 # Don't use pkg_resources because I don't want to require it before this anyway.
-if re.match(r'0|1|6\\.0', pip.__version__):
+if LooseVersion(pip.__version__) < LooseVersion('6.1.0'):
   sys.stderr.write('The python_package resource requires pip >= 6.1.0, currently '+pip.__version__+'\\n')
   sys.exit(1)
 
-from pip.commands import InstallCommand
-from pip.index import PackageFinder
-from pip.req import InstallRequirement
-
+try:
+  from pip.commands import InstallCommand
+  from pip.index import PackageFinder
+  from pip.req import InstallRequirement
+except ImportError:
+  from pip._internal.commands import InstallCommand
+  from pip._internal.index import PackageFinder
+  from pip._internal.req import InstallRequirement
 
 packages = {}
 cmd = InstallCommand()
