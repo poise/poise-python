@@ -128,13 +128,41 @@ describe 'pip reversion test', unless: File.exist?('/no_pip') do
     '/bin/pypy'
   end
 
+  # Confirm pip verisons.
   describe command("/test_pip1#{path_suffix} -m pip --version") do
     its(:exit_status) { is_expected.to eq 0 }
-    its(:stdout) { is_expected.to include '7.1.2' }
+    its(:stdout) { is_expected.to include ' 10.' }
   end
 
   describe command("/test_pip2#{path_suffix} -m pip --version") do
     its(:exit_status) { is_expected.to eq 0 }
+    its(:stdout) { is_expected.to include '8.1.2' }
+  end
+
+  describe command("/test_pip3#{path_suffix} -m pip --version") do
+    its(:exit_status) { is_expected.to eq 0 }
     its(:stdout) { is_expected.to include '7.1.2' }
+  end
+
+  describe command("/test_pip4#{path_suffix} -m pip --version") do
+    its(:exit_status) { is_expected.to eq 0 }
+    its(:stdout) { is_expected.to include '9.0.3' }
+  end
+
+  # Check that structlog installed.
+  describe command("/test_pip1#{path_suffix} -c 'import structlog'") do
+    its(:exit_status) { is_expected.to eq 0 }
+  end
+
+  describe command("/test_pip2#{path_suffix} -c 'import structlog'") do
+    its(:exit_status) { is_expected.to eq 0 }
+  end
+
+  describe command("/test_pip3#{path_suffix} -c 'import structlog'") do
+    its(:exit_status) { is_expected.to eq 0 }
+  end
+
+  describe command("/test_pip4#{path_suffix} -c 'import structlog'") do
+    its(:exit_status) { is_expected.to eq 0 }
   end
 end

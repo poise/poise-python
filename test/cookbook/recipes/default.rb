@@ -55,24 +55,47 @@ tests_to_run = value_for_platform(
   when 'pypy'
     python_runtime_test 'pypy'
   when 'pip'
-    # Specific test for pip reversion working correctly.
+    # Some pip-related tests that I don't need to run on every Python version.
+    # Pip does plenty of testing on different Python versions and I already touch
+    # the basics.
     pip_provider = value_for_platform_family(default: :portable_pypy, windows: :msi)
+    # Check the baseline state, should pull the latest pip.
     python_runtime 'pip1' do
-      pip_version '7.1.2'
       provider pip_provider
       options path: '/test_pip1'
       version ''
     end
+    # Check installing a requested version.
     python_runtime 'pip2' do
+      pip_version '8.1.2'
       provider pip_provider
       options path: '/test_pip2'
       version ''
     end
-    python_runtime 'pip2b' do
+    # Check installing the latest and reverting to an old version.
+    python_runtime 'pip3' do
+      provider pip_provider
+      options path: '/test_pip3'
+      version ''
+    end
+    python_runtime 'pip3b' do
       pip_version '7.1.2'
       provider pip_provider
-      options path: '/test_pip2'
+      options path: '/test_pip3'
       version ''
+    end
+    # Test pip9 specifically just to be safe.
+    python_runtime 'pip4' do
+      pip_version '9.0.3'
+      provider pip_provider
+      options path: '/test_pip4'
+      version ''
+    end
+    # Run a simple package install on each just to test things.
+    (1..4).each do |n|
+      python_package 'structlog' do
+        python "pip#{n}"
+      end
     end
   end
 end
