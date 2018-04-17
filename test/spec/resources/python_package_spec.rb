@@ -50,7 +50,7 @@ describe PoisePython::Resources::PythonPackage do
   end # /describe PoisePython::Resources::PythonPackage::Resource
 
   describe PoisePython::Resources::PythonPackage::Provider do
-    let(:test_resource) { nil }
+    let(:test_resource) { PoisePython::Resources::PythonPackage::Resource.new('package', chef_run.run_context) }
     let(:test_provider) { described_class.new(test_resource, chef_run.run_context) }
     def stub_cmd(cmd, **options)
       options = options.dup
