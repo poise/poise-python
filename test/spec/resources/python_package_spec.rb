@@ -72,7 +72,7 @@ describe PoisePython::Resources::PythonPackage do
       context 'with package_name foo' do
         let(:package_name) { 'foo' }
         before do
-          stub_cmd(%w{-m pip.__main__ list}, stdout: '')
+          stub_cmd(%w{-m pip.__main__ list}, environment: {'PIP_FORMAT' => 'json'}, stdout: '')
           stub_cmd(%w{- foo}, input: kind_of(String), stdout: '{"foo":"1.0.0"}')
         end
 
@@ -83,7 +83,7 @@ describe PoisePython::Resources::PythonPackage do
       context 'with package_name ["foo", "bar"]' do
         let(:package_name) { %w{foo bar} }
         before do
-          stub_cmd(%w{-m pip.__main__ list}, stdout: '')
+          stub_cmd(%w{-m pip.__main__ list}, environment: {'PIP_FORMAT' => 'json'}, stdout: '')
           stub_cmd(%w{- foo bar}, input: kind_of(String), stdout: '{"foo":"1.0.0","bar":"2.0.0"}')
         end
 
@@ -94,7 +94,7 @@ describe PoisePython::Resources::PythonPackage do
       context 'with a package with extras' do
         let(:package_name) { 'foo[bar]' }
         before do
-          stub_cmd(%w{-m pip.__main__ list}, stdout: '')
+          stub_cmd(%w{-m pip.__main__ list}, environment: {'PIP_FORMAT' => 'json'}, stdout: '')
           stub_cmd(%w{- foo}, input: kind_of(String), stdout: '{"foo":"1.0.0"}')
         end
 
@@ -105,7 +105,7 @@ describe PoisePython::Resources::PythonPackage do
       context 'with a package with underscores' do
         let(:package_name) { 'cx_foo' }
         before do
-          stub_cmd(%w{-m pip.__main__ list}, stdout: '')
+          stub_cmd(%w{-m pip.__main__ list}, environment: {'PIP_FORMAT' => 'json'}, stdout: '')
           stub_cmd(%w{- cx-foo}, input: kind_of(String), stdout: '{"cx-foo":"1.0.0"}')
         end
 
@@ -117,7 +117,7 @@ describe PoisePython::Resources::PythonPackage do
         let(:package_name) { 'foo' }
         before do
           test_resource.options('--index-url=http://example')
-          stub_cmd("-m pip.__main__ list --index-url=http://example  ", stdout: '', array_13: true)
+          stub_cmd("-m pip.__main__ list --index-url=http://example  ", environment: {'PIP_FORMAT' => 'json'}, stdout: '', array_13: true)
           stub_cmd("-  --index-url=http://example  foo", input: kind_of(String), stdout: '{"foo":"1.0.0"}', array_13: true)
         end
 
@@ -129,7 +129,7 @@ describe PoisePython::Resources::PythonPackage do
         let(:package_name) { 'foo' }
         before do
           test_resource.list_options('--index-url=http://example')
-          stub_cmd("-m pip.__main__ list  --index-url=http://example ", stdout: '')
+          stub_cmd("-m pip.__main__ list  --index-url=http://example ", environment: {'PIP_FORMAT' => 'json'}, stdout: '')
           stub_cmd("-   --index-url=http://example foo", input: kind_of(String), stdout: '{"foo":"1.0.0"}')
         end
 
@@ -141,7 +141,7 @@ describe PoisePython::Resources::PythonPackage do
         let(:package_name) { 'foo' }
         before do
           test_resource.list_options(%w{--index-url=http://example})
-          stub_cmd(%w{-m pip.__main__ list --index-url=http://example}, stdout: '')
+          stub_cmd(%w{-m pip.__main__ list --index-url=http://example}, environment: {'PIP_FORMAT' => 'json'}, stdout: '')
           stub_cmd(%w{-  --index-url=http://example foo}, input: kind_of(String), stdout: '{"foo":"1.0.0"}')
         end
 
@@ -301,6 +301,13 @@ cx-Freeze (4.3.4)
 EOH
         it { is_expected.to eq({'eventlet' => '0.12.1', 'fabric' => '1.9.1', 'fabric-rundeck' => '1.2', 'flake8' => '2.1.0.dev0', 'cx-freeze' => '4.3.4'}) }
       end # /context with standard content
+
+      context 'with JSON content' do
+        let(:text) { <<-EOH.strip }
+[{"name":"eventlet","version":"0.12.1"}, {"name":"Fabric","version":"1.9.1"}, {"name":"fabric-rundeck","version":"1.2"}, {"name":"flake8","version":"2.1.0.dev0"}, {"name":"cx-Freeze","version":"4.3.4"}]
+EOH
+        it { is_expected.to eq({'eventlet' => '0.12.1', 'fabric' => '1.9.1', 'fabric-rundeck' => '1.2', 'flake8' => '2.1.0.dev0', 'cx-freeze' => '4.3.4'}) }
+      end # /context with JSON content
 
       context 'with malformed content' do
         let(:text) { <<-EOH }
