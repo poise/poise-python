@@ -18,7 +18,7 @@ require 'spec_helper'
 
 describe PoisePython::PythonProviders::Scl do
   let(:python_version) { '' }
-  let(:chefspec_options) { {platform: 'centos', version: '7.0'} }
+  let(:chefspec_options) { {platform: 'centos', version: '7.4.1708'} }
   let(:default_attributes) { {poise_python_version: python_version} }
   let(:python_runtime) { chef_run.python_runtime('test') }
   step_into(:python_runtime)
@@ -60,7 +60,7 @@ describe PoisePython::PythonProviders::Scl do
   end # /context with version "3.3"
 
   context 'with version "" on CentOS 6' do
-    let(:chefspec_options) { {platform: 'centos', version: '6.0'} }
+    let(:chefspec_options) { {platform: 'centos', version: '6.9'} }
     let(:python_version) { '' }
     it_behaves_like 'scl provider', 'rh-python34'
   end # /context with version "" on CentOS 6

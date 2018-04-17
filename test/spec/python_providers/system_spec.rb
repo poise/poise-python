@@ -65,13 +65,13 @@ describe PoisePython::PythonProviders::System do
     it_behaves_like 'system provider', %w{python2.3 python23 python}, 'python2.3'
   end # /context with version 2.3
 
-  context 'on Debian 8.1' do
-    before { chefspec_options.update(platform: 'debian', version: '8.1') }
+  context 'on Debian 8' do
+    before { chefspec_options.update(platform: 'debian', version: '8.9') }
     it_behaves_like 'system provider', 'python3.4'
-  end # /context on Debian 8.1
+  end # /context on Debian 8
 
   context 'on CentOS 7' do
-    before { chefspec_options.update(platform: 'centos', version: '7.0') }
+    before { chefspec_options.update(platform: 'centos', version: '7.4.1708') }
     recipe do
       python_runtime 'test' do
         provider :system
@@ -80,7 +80,7 @@ describe PoisePython::PythonProviders::System do
       end
     end
     it_behaves_like 'system provider', 'python'
-  end # /context on Debian 8.1
+  end # /context on CentOS 7
 
   context 'action :uninstall' do
     recipe do
