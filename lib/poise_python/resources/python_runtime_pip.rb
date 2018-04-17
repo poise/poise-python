@@ -165,6 +165,7 @@ module PoisePython
               action :upgrade
               parent_python new_resource.parent
               version new_resource.version if new_resource.version
+              allow_downgrade true
             end
           end
         end
