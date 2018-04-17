@@ -362,7 +362,7 @@ EOH
           if text[0] == '['
             # Pip 9 or newer, so it understood $PIP_FORMAT=json.
             Chef::JSONCompat.parse(text).each_with_object({}) do |data, memo|
-              memo[data['name']] = data['version']
+              memo[parse_package_name(data['name'])] = data['version']
             end
           else
             # Pip 8 or earlier, which doesn't support JSON output.
