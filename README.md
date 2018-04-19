@@ -104,17 +104,22 @@ python_runtime '2'
 * `get_pip_url` – URL to download the `get-pip.py` bootstrap script from.
   *(default: https://bootstrap.pypa.io/get-pip.py)*
 * `pip_version` – Version of pip to install. If set to `true`, use the latest.
-  If set to `false`, do not install pip. For backward compatibility, can also be
-  set to a URL instead of `get_pip_url`. *(default: true)*
+  If set to `false`, do not install pip. If set to `'9.0.3'` it installs the specified version.
+  If a partial version is given, currently installs only the first/oldest version matching that prefix. *See #110 for caveats.*
+  For backward compatibility, can also be set to a URL instead of `get_pip_url`. *(default: true)*
 * `setuptools_version` – Version of Setuptools to install. If set to `true`, use
-  the latest. If set to `false`, do not install Setuptools. *(default: true)*
+  the latest. If set to `false`, do not install Setuptools. *(default: true)* 
+  If set to `'39.0.1'` it installs the specified version.
+  If a partial version is given, currently installs only the first/oldest version matching that prefix. *See #110 for caveats.*
 * `virtualenv_version` – Version of virtualenv to install. If set to `true`,
   use the latest. If set to `false`, do not install virtualenv. Will never be
   installed if the `venv` module is already available, such as on Python 3.
   *(default: true)*
-* `wheel_version` – Version of wheel to install. If set to `true`, use the
+  If set to `'15.2.0'` it installs the specified version.
+  If a partial version is given, currently installs only the first/oldest version matching that prefix. *See #110 for caveats.** `wheel_version` – Version of wheel to install. If set to `true`, use the
   latest. If set to `false`, do not install wheel.
-
+  If set to `'0.30.0'` it installs the specified version.
+  If a partial version is given, currently installs only the first/oldest version matching that prefix. *See #110 for caveats.*
 #### Provider Options
 
 The `poise-python` library offers an additional way to pass configuration
