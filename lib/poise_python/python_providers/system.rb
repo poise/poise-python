@@ -35,7 +35,7 @@ module PoisePython
           '~> 6.0' => %w{python3.1 python2.6 python2.5},
         },
         ubuntu: {
-          '18.04' => %w{python3.6 python2.7},
+          '18.04' => %w{python3 python2.7},
           '16.04' => %w{python3.5 python2.7},
           '14.04' => %w{python3.4 python2.7},
           '12.04' => %w{python3.2 python2.7},
@@ -74,7 +74,7 @@ module PoisePython
           end
           # Aliases for 2 and 3.
           if version == '3' || version == ''
-            names.concat(%w{python3.5 python35 python3.4 python34 python3.3 python33 python3.2 python32 python3.1 python31 python3.0 python30 python3})
+            names.concat(%w{python3.7 python37 python3.6 python36 python3.5 python35 python3.4 python34 python3.3 python33 python3.2 python32 python3.1 python31 python3.0 python30 python3})
           end
           if version == '2' || version == ''
             names.concat(%w{python2.7 python27 python2.6 python26 python2.5 python25})
