@@ -43,7 +43,7 @@ describe PoisePython::PythonProviders::System do
 
   context 'with version ""' do
     let(:python_version) { '' }
-    it_behaves_like 'system provider', %w{python3.5 python35 python3.4 python34 python3.3 python33 python3.2 python32 python3.1 python31 python3.0 python30 python3 python2.7 python27 python2.6 python26 python2.5 python25 python}, 'python3.4'
+    it_behaves_like 'system provider', %w{python3.7 python37 python3.6 python36 python3.5 python35 python3.4 python34 python3.3 python33 python3.2 python32 python3.1 python31 python3.0 python30 python3 python2.7 python27 python2.6 python26 python2.5 python25 python}, 'python3.4'
   end # /context with version ""
 
   context 'with version 2' do
@@ -53,7 +53,7 @@ describe PoisePython::PythonProviders::System do
 
   context 'with version 3' do
     let(:python_version) { '3' }
-    it_behaves_like 'system provider', %w{python3.5 python35 python3.4 python34 python3.3 python33 python3.2 python32 python3.1 python31 python3.0 python30 python3 python}, 'python3.4'
+    it_behaves_like 'system provider', %w{python3.7 python37 python3.6 python36 python3.5 python35 python3.4 python34 python3.3 python33 python3.2 python32 python3.1 python31 python3.0 python30 python3 python}, 'python3.4'
   end # /context with version 3
 
   context 'with version 2.3' do
@@ -64,6 +64,13 @@ describe PoisePython::PythonProviders::System do
     end
     it_behaves_like 'system provider', %w{python2.3 python23 python}, 'python2.3'
   end # /context with version 2.3
+
+  context 'on Ubuntu 18.04' do
+    let(:chefspec_options) { {platform: 'ubuntu', version: '18.04'} }
+    let(:python_version) { '3.6' }
+
+    it { is_expected.to install_package(%w{python3.6-venv python3.6-distutils}) }
+  end # /context on Ubuntu 18.04
 
   context 'on Debian 8' do
     before { chefspec_options.update(platform: 'debian', version: '8.9') }
