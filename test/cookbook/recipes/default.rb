@@ -91,6 +91,14 @@ tests_to_run = value_for_platform(
       options path: '/test_pip4'
       version ''
     end
+    # Test pip9 specifically just to be safe.
+    python_runtime 'pip5' do
+      pip_version '10.0.1'
+      provider pip_provider
+      options path: '/test_pip5'
+      version ''
+    end
+
     # Run a simple package install on each just to test things.
     (1..4).each do |n|
       python_package 'structlog' do
