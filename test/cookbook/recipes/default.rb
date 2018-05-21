@@ -93,7 +93,7 @@ tests_to_run = value_for_platform(
     end
     # Test pip9 specifically just to be safe.
     python_runtime 'pip5' do
-      pip_version '10.0.2'
+      pip_version '10.0.1'
       provider pip_provider
       options path: '/test_pip5'
       version ''
