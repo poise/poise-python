@@ -26,7 +26,8 @@ module PoisePython
     class Scl < Base
       include PoiseLanguages::Scl::Mixin
       provides(:scl)
-      scl_package('3.5.1', 'rh-python35', 'rh-python35-python-devel', '>= 7.0')
+      scl_package('3.6.3', 'rh-python36', 'rh-python36-python-devel')
+      scl_package('3.5.1', 'rh-python35', 'rh-python35-python-devel')
       scl_package('3.4.2', 'rh-python34', 'rh-python34-python-devel')
       scl_package('3.3.2', 'python33', 'python33-python-devel')
       scl_package('2.7.8', 'python27', 'python27-python-devel')
