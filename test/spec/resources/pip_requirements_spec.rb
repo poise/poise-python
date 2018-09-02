@@ -24,7 +24,7 @@ describe PoisePython::Resources::PipRequirements do
   let(:pip_cwd) { '/test' }
   step_into(:pip_requirements)
   before do
-    allow(File).to receive(:directory?).and_return(false)
+    allow(File).to receive(:directory?).and_call_original
     allow(File).to receive(:directory?).with('/test').and_return(true)
   end
   before do
