@@ -46,6 +46,7 @@ try:
   from pip.commands import InstallCommand
   from pip.index import PackageFinder
   from pip.req import InstallRequirement
+  install_req_from_line = InstallRequirement.from_line
 except ImportError:
   # Pip 10 moved all internals to their own package.
   from pip._internal.commands import InstallCommand
@@ -55,6 +56,7 @@ except ImportError:
     from pip._internal.req.constructors import install_req_from_line
   except ImportError:
     from pip._internal.req import InstallRequirement
+    install_req_from_line = InstallRequirement.from_line
 
 packages = {}
 cmd = InstallCommand()
@@ -77,10 +79,7 @@ with cmd._build_session(options) as session:
   finder = PackageFinder(**finder_options)
   find_all = getattr(finder, 'find_all_candidates', getattr(finder, '_find_all_versions', None))
   for arg in args:
-    try:
-      req = install_req_from_line(arg)
-    except NameError:
-      req = InstallRequirement.from_line(arg)
+    req = install_req_from_line(arg)
     found = finder.find_requirement(req, True)
     all_candidates = find_all(req.name)
     candidate = [c for c in all_candidates if c.location == found]
