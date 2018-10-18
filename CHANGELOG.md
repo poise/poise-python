@@ -1,5 +1,11 @@
 # Poise-Python Changelog
 
+## v1.7.1
+
+* Support for Pip 18.1.
+* Improved support for Python 3 on Ubuntu 18.04.
+* Update SCL packages.
+
 ## v1.7.0
 
 * Support for Pip 10.
