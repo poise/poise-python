@@ -41,7 +41,7 @@ describe PoisePython::PythonProviders::Scl do
 
   context 'with version ""' do
     let(:python_version) { '' }
-    it_behaves_like 'scl provider', 'rh-python35'
+    it_behaves_like 'scl provider', 'rh-python36'
   end # /context with version ""
 
   context 'with version "2"' do
@@ -51,7 +51,7 @@ describe PoisePython::PythonProviders::Scl do
 
   context 'with version "3"' do
     let(:python_version) { '3' }
-    it_behaves_like 'scl provider', 'rh-python35'
+    it_behaves_like 'scl provider', 'rh-python36'
   end # /context with version "3"
 
   context 'with version "3.3"' do
@@ -62,7 +62,7 @@ describe PoisePython::PythonProviders::Scl do
   context 'with version "" on CentOS 6' do
     let(:chefspec_options) { {platform: 'centos', version: '6.9'} }
     let(:python_version) { '' }
-    it_behaves_like 'scl provider', 'rh-python34'
+    it_behaves_like 'scl provider', 'rh-python36'
   end # /context with version "" on CentOS 6
 
   context 'action :uninstall' do
