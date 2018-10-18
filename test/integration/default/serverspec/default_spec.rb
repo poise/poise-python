@@ -131,7 +131,7 @@ describe 'pip reversion test', unless: File.exist?('/no_pip') do
   # Confirm pip verisons.
   describe command("/test_pip1#{path_suffix} -m pip --version") do
     its(:exit_status) { is_expected.to eq 0 }
-    its(:stdout) { is_expected.to include ' 10.' }
+    its(:stdout) { is_expected.to include ' 18.' }
   end
 
   describe command("/test_pip2#{path_suffix} -m pip --version") do
