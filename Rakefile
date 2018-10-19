@@ -14,4 +14,5 @@
 # limitations under the License.
 #
 
+ENV['KITCHEN_CONCURRENCY'] = '10'
 require 'poise_boiler/rakefile'

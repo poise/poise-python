@@ -27,7 +27,7 @@ def dev_gem(name, path: File.join('..', name), github: nil)
   end
 end
 
-dev_gem 'halite'
+dev_gem 'halite', github: true
 dev_gem 'poise'
 dev_gem 'poise-archive'
 dev_gem 'poise-boiler'
