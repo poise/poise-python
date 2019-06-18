@@ -117,6 +117,7 @@ module PoisePython
             python_version_cmd = poise_shell_out!([new_resource.parent.python_binary, '--version'], environment: new_resource.parent.python_environment)
             # Python 2 puts the output on stderr, 3 is on stdout. You can't make this shit up.
             python_version = (python_version_cmd.stdout + python_version_cmd.stderr)[/Python (\S+)/, 1]
+            python_version = python_version.gsub('+','').gsub('-','').gsub('~','') # stripping extra characters per https://www.debian.org/doc/debian-policy/ch-controlfields.html?fbclid=IwAR1Z9fSxh4pjfNbq-IUN78bLslaf4TlzBi7BI0AzKxj75AGREnxoh85O8cU#version
             Chef::Log.debug("[#{new_resource}] Checking for Python 2.6 fixup of get-pip URL, found Python version #{python_version || '(unknown)'}")
             if python_version && Gem::Version.create(python_version) < PY26_FIXUP_VERSION
               Chef::Log.debug("[#{new_resource}] Detected old Python, enabling fixup")
